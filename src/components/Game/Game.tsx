@@ -1,8 +1,11 @@
 import Image from "next/image";
 import { useState } from "react";
-import { useDate } from "@/context/dateContext";
 
 import type { ScheduleGameType, GameType } from "@/utils/types/index";
+
+// rtk context
+import type { RootState } from "@/RtkGlobals/store";
+import { useSelector } from "react-redux";
 
 import { useQuery } from "@tanstack/react-query";
 import axiosFetcher from "@/utils/api/axiosFetcher";
@@ -19,7 +22,7 @@ const Game = ({
   awayTeam,
   broadcasters,
 }: ScheduleGameType) => {
-  const { dateTimeUTC } = useDate();
+  const dateTimeUTC = useSelector((state: RootState) => state.date.dateTimeUTC);
   const [isLive, setIsLive] = useState<boolean>(
     new Date(dateTimeUTC) > new Date(gameDateTimeUTC) && gameStatus !== 3
   );
@@ -65,8 +68,9 @@ const Game = ({
               </span>
             </span>
           </div>
+
           <span
-            className={`flex-none ml-16 ${data?.awayTeam.score > data?.homeTeam.score
+            className={`flex-none ml-16 ${data && data?.awayTeam.score > data?.homeTeam.score
                 ? "font-extrabold"
                 : ""
               } `}
@@ -89,7 +93,7 @@ const Game = ({
             </span>
           </div>
           <span
-            className={`flex-none ml-16 ${data?.homeTeam.score > data?.awayTeam.score
+            className={`flex-none ml-16 ${data && data?.homeTeam.score > data?.awayTeam.score
                 ? "font-extrabold"
                 : ""
               } `}

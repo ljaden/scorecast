@@ -1,6 +1,9 @@
 import type { Scheduledata, ScheduleGameType } from "@/utils/types/index";
 
-import { useDate } from "@/context/dateContext";
+// rtk context
+import type { RootState } from "@/RtkGlobals/store";
+import { useSelector, useDispatch } from "react-redux";
+import { nextDate, prevDate } from "@/RtkGlobals/features/date/dateSlice";
 
 // components
 import Game from "../Game/Game";
@@ -14,20 +17,21 @@ type Props = {
 };
 
 const Scorebar = ({ data, displayStats }: Props) => {
-  const { date, dateFormatted, dispatch } = useDate();
-  const schedule = getDailyGames(data, dateFormatted);
+  const rtkDate = useSelector((state: RootState) => state.date);
+  const rtkDispatch = useDispatch();
+  const schedule = getDailyGames(data, rtkDate.dateFormatted);
 
   return (
     <>
       <div className="flex gap-3 justify-between items-center border-b border-gray-300 py-4">
         <AiOutlineCaretLeft
           className="cursor-pointer"
-          onClick={() => dispatch({ type: "previous_date" })}
+          onClick={() => rtkDispatch(prevDate())}
         />
-        <p>{date}</p>
+        <p>{rtkDate.date}</p>
         <AiOutlineCaretRight
           className="cursor-pointer"
-          onClick={() => dispatch({ type: "next_date" })}
+          onClick={() => rtkDispatch(nextDate())}
         />
       </div>
       <ul className="flex justify-center gap-4 flex-wrap">

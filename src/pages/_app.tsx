@@ -8,7 +8,8 @@ import type { AppProps } from "next/app";
 
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import {DateProvider} from "@/context/dateContext"
+import { store } from "@/RtkGlobals/store";
+import { Provider } from "react-redux";
 
 // font
 const font = Montserrat({ subsets: ["latin"], variable: "--font-mon" });
@@ -39,14 +40,13 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
   );
 
   return (
-  <DateProvider>
-
-    <QueryClientProvider client={queryClient}>
-      <div className={`${font.variable} font-sans`}>
-        {getLayout(<Component {...pageProps} />)}
-      </div>
-      <ReactQueryDevtools />
-    </QueryClientProvider>
-  </DateProvider>
+    <Provider store={store}>
+      <QueryClientProvider client={queryClient}>
+        <div className={`${font.variable} font-sans`}>
+          {getLayout(<Component {...pageProps} />)}
+        </div>
+        <ReactQueryDevtools />
+      </QueryClientProvider>
+    </Provider>
   );
 }
