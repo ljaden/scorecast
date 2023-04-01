@@ -8,9 +8,13 @@ export default async function handler(
   res: NextApiResponse<GameType>
 ) {
   const { gameId } = req.query;
+
   try {
-    const data = await getGameStats(gameId);
-    console.log(req.query);
-    res.status(200).json(data);
-  } catch (error) { }
+    if (typeof gameId === "string") {
+      const data = await getGameStats(gameId);
+      res.status(200).json(data);
+    }
+  } catch (error) {
+    throw error;
+  }
 }

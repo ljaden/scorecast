@@ -125,8 +125,8 @@ export async function getStandings() {
     ];
     const { headers, rowSet } = standings.resultSets[0];
 
-    const result = rowSet.map((row) =>
-      row.reduce((obj, val, i) => {
+    const result = rowSet.map((row: any) =>
+      row.reduce((obj: any, val: any, i: number) => {
         // if (selectedHeaders.includes(headers[i])) {
         obj[headers[i]] = val;
         // }

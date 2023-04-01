@@ -9,6 +9,7 @@ type Props = {
     east: TeamStandings[];
   };
 };
+
 const Standings = ({ standings }: Props) => {
   const [displayEast, setDisplayEast] = useState<boolean>(true);
   return (
@@ -46,30 +47,32 @@ const Standings = ({ standings }: Props) => {
               </tr>
             </thead>
             <tbody>
-              {standings[displayEast ? "east" : "west"].map((team, index) => (
-                <tr key={team.TeamID} className="py-2 border-b">
-                  <td className="flex items-center gap-4">
-                    <span className="text-xs text-slate-500 pr-1">
-                      {index + 1}
-                    </span>
-                    <TeamLogo teamId={team.TeamID} width={25} height={25} />
-                    <span className="font-bold">{team.TeamName}</span>
-                  </td>
-                  <td>{team.WINS}</td>
-                  <td>{team.LOSSES}</td>
-                  <td>{team.WinPCT.toFixed(3).substring(1)}</td>
-                  <td>{team.WINS + team.LOSSES}</td>
-                  <td
-                    className={`${team.CurrentStreak > 0
-                        ? "text-green-700"
-                        : "text-rose-700"
-                      }`}
-                  >
-                    {team.strCurrentStreak}
-                  </td>
-                  <td>{team.L10}</td>
-                </tr>
-              ))}
+              {standings[displayEast ? "east" : "west"].map(
+                (team: TeamStandings, index: number) => (
+                  <tr key={team.TeamID} className="py-2 border-b">
+                    <td className="flex items-center gap-4">
+                      <span className="text-xs text-slate-500 pr-1">
+                        {index + 1}
+                      </span>
+                      <TeamLogo teamId={team.TeamID} width={25} height={25} />
+                      <span className="font-bold">{team.TeamName}</span>
+                    </td>
+                    <td>{team.WINS}</td>
+                    <td>{team.LOSSES}</td>
+                    <td>{team.WinPCT.toFixed(3).substring(1)}</td>
+                    <td>{team.WINS + team.LOSSES}</td>
+                    <td
+                      className={`${team.CurrentStreak > 0
+                          ? "text-green-700"
+                          : "text-rose-700"
+                        }`}
+                    >
+                      {team.strCurrentStreak}
+                    </td>
+                    <td>{team.L10}</td>
+                  </tr>
+                )
+              )}
             </tbody>
           </table>
         </div>

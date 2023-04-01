@@ -35,7 +35,7 @@ const StandingsPage: NextPageWithLayout<AppProps> = ({ standings }) => {
     staleTime: 60000,
   });
 
-  let filterStandings;
+  let filterStandings: any;
 
   switch (filterSettings) {
     case "Division":
@@ -79,7 +79,7 @@ const StandingsPage: NextPageWithLayout<AppProps> = ({ standings }) => {
         </select>
       </div>
       {filterSettings === "Overall" && <Standings standings={data.standings} />}
-      {filterSettings === "Conference" && (
+      {filterStandings && filterSettings === "Conference" && (
         <Conference standings={filterStandings} />
       )}
     </>

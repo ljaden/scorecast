@@ -19,12 +19,14 @@ const Period = ({ gameId }: Props) => {
     return <h1>Loading</h1>;
   }
 
-  const homeScore = data?.homeTeam.periods.reduce((total, period) => {
-    return total + period.score;
-  }, 0);
-  const awayScore = data?.awayTeam.periods.reduce((total, period) => {
-    return total + period.score;
-  }, 0);
+  const homeScore =
+    data?.homeTeam.periods.reduce((total, period) => {
+      return total + period.score;
+    }, 0) ?? 0;
+  const awayScore =
+    data?.awayTeam.periods.reduce((total, period) => {
+      return total + period.score;
+    }, 0) ?? 0;
 
   return (
     <div>
@@ -34,7 +36,7 @@ const Period = ({ gameId }: Props) => {
         <thead className="border-b-2 border-black">
           <tr className="my-4">
             <th></th>
-            {Array.from({ length: data.period }, (_, index) => index).map(
+            {Array.from({ length: data?.period ?? 3 }, (_, index) => index).map(
               (period) =>
                 period > 3 ? (
                   <th key={period}>OT</th>
@@ -49,10 +51,9 @@ const Period = ({ gameId }: Props) => {
           <tr>
             <td className="text-center">
               <TeamLogo
-                teamId={data?.homeTeam.teamId}
+                teamId={data?.homeTeam.teamId ?? 1}
                 width={30}
                 height={30}
-                className="inline-block"
               />
             </td>
             {data?.homeTeam.periods.map((period, i) => (
@@ -74,7 +75,11 @@ const Period = ({ gameId }: Props) => {
 
           <tr>
             <td>
-              <TeamLogo teamId={data?.awayTeam.teamId} width={30} height={30} />
+              <TeamLogo
+                teamId={data?.awayTeam.teamId ?? 1}
+                width={30}
+                height={30}
+              />
             </td>
             {data?.homeTeam.periods.map((period, i) => (
               <td
