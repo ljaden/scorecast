@@ -21,7 +21,7 @@ const PlayerStats = ({ gameId }: Props) => {
 
   useEffect(() => {
     setPlayers(displayHome ? data?.homeTeam.players : data?.awayTeam.players);
-  }, [displayHome]);
+  }, [displayHome, data]);
 
   return (
     <>

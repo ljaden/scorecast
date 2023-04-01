@@ -7,7 +7,7 @@ export default function Home() {
 
   useEffect(() => {
     router.prefetch("/dashboard");
-  }, []);
+  }, [router]);
 
   useEffect(() => {
     const redirectId = setTimeout(() => {
