@@ -17,7 +17,7 @@ type AppProps = {
   standings: StandingsType;
 };
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getServerSideProps = async () => {
   const data = await getStandings();
   return {
     props: {
@@ -32,7 +32,6 @@ const StandingsPage: NextPageWithLayout<AppProps> = ({ standings }) => {
     queryKey: ["standings"],
     queryFn: () => axiosFetcher("/api/standings"),
     initialData: standings,
-    staleTime: 60000,
   });
 
   let filterStandings: any;
