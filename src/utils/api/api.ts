@@ -20,7 +20,7 @@ export async function getFullSchedule() {
 }
 
 // * Fetch scheduled games of dateParam
-export async function getSchedule(dateParam: string | undefined) {
+export async function getSchedule(dateParam?: string) {
   // * @params
   // * dateParam:string| undefined consist of date in YYYYMMDD format
   try {
