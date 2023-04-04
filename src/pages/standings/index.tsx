@@ -12,22 +12,29 @@ import { getStandings } from "@/utils/api/api";
 
 type AppProps = {
   standings: StandingsType;
+  ewStandings: {
+    east: TeamStandings[];
+    west: TeamStandings[];
+  };
 };
 
 export const getStaticProps = async () => {
-  const data = await getStandings();
+  const standings = await getStandings();
+  const ewStandings = standingsEastWest(standings);
   return {
     props: {
-      standings: data,
+      standings,
+      ewStandings,
     },
     revalidate: 60,
   };
 };
 
-const StandingsPage: NextPageWithLayout<AppProps> = ({ standings }) => {
-  const [filterSettings, setFilterSettings] = useState<string>("Overall");
-
-  const ewStandings = useMemo(() => standingsEastWest(standings), [standings]);
+const StandingsPage: NextPageWithLayout<AppProps> = ({
+  standings,
+  ewStandings,
+}) => {
+  const [standingsOptions, setStandingsOptions] = useState<string>("Overall");
 
   return (
     <>
@@ -36,23 +43,23 @@ const StandingsPage: NextPageWithLayout<AppProps> = ({ standings }) => {
         <select
           name=""
           id=""
-          onChange={(e) => setFilterSettings(e.target.value)}
+          onChange={(e) => setStandingsOptions(e.target.value)}
         >
           <option value="Overall">Overall</option>
           <option value="Conference">Conference</option>
         </select>
       </div>
-      {filterSettings === "Overall" && (
+      {standingsOptions === "Overall" && (
         <Standings standings={standings.standings} />
       )}
-      {ewStandings && filterSettings === "Conference" && (
+      {standingsOptions === "Conference" && (
         <Conference standings={ewStandings} />
       )}
     </>
   );
 };
 
-const standingsEastWest = (standings: StandingsType) => {
+export const standingsEastWest = (standings: StandingsType) => {
   const eastWest: { east: TeamStandings[]; west: TeamStandings[] } = {
     east: [],
     west: [],
