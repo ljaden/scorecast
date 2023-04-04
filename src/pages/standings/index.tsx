@@ -1,65 +1,33 @@
-import { GetStaticProps } from "next";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import type { NextPageWithLayout } from "../_app";
 import type { ReactElement } from "react";
-import type { StandingsType } from "@/utils/types";
+import type { StandingsType, TeamStandings } from "@/utils/types";
 
 import DashLayout from "@/components/Layouts/DashLayout";
 import Standings from "@/components/Standings/Standings";
 import Conference from "@/components/Standings/Conference";
 
 import { getStandings } from "@/utils/api/api";
-import { useQuery } from "@tanstack/react-query";
-import axiosFetcher from "@/utils/api/axiosFetcher";
 
 type AppProps = {
   standings: StandingsType;
 };
 
-export const getServerSideProps = async () => {
+export const getStaticProps = async () => {
   const data = await getStandings();
   return {
     props: {
       standings: data,
     },
+    revalidate: 60,
   };
 };
 
 const StandingsPage: NextPageWithLayout<AppProps> = ({ standings }) => {
   const [filterSettings, setFilterSettings] = useState<string>("Overall");
-  const { data } = useQuery<StandingsType>({
-    queryKey: ["standings"],
-    queryFn: () => axiosFetcher("/api/standings"),
-    initialData: standings,
-  });
 
-  let filterStandings: any;
-
-  switch (filterSettings) {
-    case "Division":
-      filterStandings = {
-        alantic: data.standings.filter((team) => team.Division === "Alantic"),
-        northwest: data.standings.filter(
-          (team) => team.Division === "Northwest"
-        ),
-        southeast: data.standings.filter(
-          (team) => team.Division === "Southeast"
-        ),
-        central: data.standings.filter((team) => team.Division === "Central"),
-        pacific: data.standings.filter((team) => team.Division === "Pacific"),
-        southwest: data.standings.filter(
-          (team) => team.Division === "Southwest"
-        ),
-      };
-      break;
-    case "Conference":
-      filterStandings = {
-        west: data.standings.filter((team) => team.Conference === "West"),
-        east: data.standings.filter((team) => team.Conference === "East"),
-      };
-      break;
-  }
+  const ewStandings = useMemo(() => standingsEastWest(standings), [standings]);
 
   return (
     <>
@@ -72,17 +40,31 @@ const StandingsPage: NextPageWithLayout<AppProps> = ({ standings }) => {
         >
           <option value="Overall">Overall</option>
           <option value="Conference">Conference</option>
-          <option value="Division" disabled>
-            Division(WIP)
-          </option>
         </select>
       </div>
-      {filterSettings === "Overall" && <Standings standings={data.standings} />}
-      {filterStandings && filterSettings === "Conference" && (
-        <Conference standings={filterStandings} />
+      {filterSettings === "Overall" && (
+        <Standings standings={standings.standings} />
+      )}
+      {ewStandings && filterSettings === "Conference" && (
+        <Conference standings={ewStandings} />
       )}
     </>
   );
+};
+
+const standingsEastWest = (standings: StandingsType) => {
+  const eastWest: { east: TeamStandings[]; west: TeamStandings[] } = {
+    east: [],
+    west: [],
+  };
+
+  standings.standings.forEach((team) => {
+    team.Conference === "East"
+      ? eastWest["east"].push(team)
+      : eastWest["west"].push(team);
+  });
+
+  return eastWest;
 };
 
 StandingsPage.getLayout = function getLayout(page: ReactElement) {

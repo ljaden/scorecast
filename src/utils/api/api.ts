@@ -127,9 +127,9 @@ export async function getStandings() {
 
     const result = rowSet.map((row: any) =>
       row.reduce((obj: any, val: any, i: number) => {
-        // if (selectedHeaders.includes(headers[i])) {
-        obj[headers[i]] = val;
-        // }
+        if (selectedHeaders.includes(headers[i])) {
+          obj[headers[i]] = val;
+        }
         return obj;
       }, {})
     );

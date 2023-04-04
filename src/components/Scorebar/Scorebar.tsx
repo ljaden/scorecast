@@ -36,7 +36,12 @@ const Scorebar = ({ data: schedule, displayStats }: Props) => {
             rtkDispatch(prevDate());
           }}
         />
-        <p>{rtkDate.date}</p>
+        <p>
+          {rtkDate.date}
+          <span className="text-gray-500 text-sm">
+            {rtkDate.todayFormatted === rtkDate.dateFormatted ? " (Today)" : ""}
+          </span>
+        </p>
         <AiOutlineCaretRight
           className="cursor-pointer"
           onClick={() => {
@@ -49,7 +54,7 @@ const Scorebar = ({ data: schedule, displayStats }: Props) => {
           schedule?.games.map((game) => (
             <li
               key={game.gameId}
-              className="w-48 border border-black my-1 pr-4 pl-4 pb-4 pt-1 hover:bg-red-300 whitespace-nowrap inline-block"
+              className="w-48 border border-black my-1 pr-4 pl-4 pb-4 pt-1 hover:bg-red-300 whitespace-nowrap inline-block cursor-pointer"
               onClick={() => displayStats(game)}
             >
               <Game {...game} />
