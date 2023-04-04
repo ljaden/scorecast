@@ -18,7 +18,19 @@ type AppProps = {
   };
 };
 
-export const getStaticProps = async () => {
+// export const getStaticProps = async () => {
+//   const standings = await getStandings();
+//   const ewStandings = standingsEastWest(standings);
+//   return {
+//     props: {
+//       standings,
+//       ewStandings,
+//     },
+//     revalidate: 60,
+//   };
+// };
+
+export const getServerSideProps = async () => {
   const standings = await getStandings();
   const ewStandings = standingsEastWest(standings);
   return {
@@ -26,7 +38,6 @@ export const getStaticProps = async () => {
       standings,
       ewStandings,
     },
-    revalidate: 60,
   };
 };
 
