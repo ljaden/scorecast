@@ -20,23 +20,27 @@ type AppProps = {
   };
 };
 
-// export const getStaticProps = async () => {
-//   const standings = await getStandings();
-//   const ewStandings = standingsEastWest(standings);
-//   return {
-//     props: {
-//       standings,
-//       ewStandings,
-//     },
-//     revalidate: 60,
-//   };
-// };
+export const getStaticProps = async () => {
+  const standings = await getStandings();
+  const ewStandings = standingsEastWest(standings);
+  return {
+    props: {
+      standings,
+      ewStandings,
+    },
+    revalidate: 60,
+  };
+};
 
-const StandingsPage: NextPageWithLayout<AppProps> = ({ }) => {
+const StandingsPage: NextPageWithLayout<AppProps> = ({
+  standings,
+  ewStandings,
+}) => {
   const [standingsOptions, setStandingsOptions] = useState<string>("Overall");
   const { data } = useQuery<StandingsType>({
     queryKey: ["standings"],
     queryFn: () => axiosFetcher("/api/standings"),
+    initialData: standings,
     onSuccess: (data) => console.log(data),
   });
 
@@ -54,11 +58,11 @@ const StandingsPage: NextPageWithLayout<AppProps> = ({ }) => {
         </select>
       </div>
       {data && standingsOptions === "Overall" && (
-        <Standings standings={data?.standings} />
+        <Standings standings={standings.standings} />
       )}
-      {/* {standingsOptions === "Conference" && ( */}
-      {/*   <Conference standings={ewStandings} /> */}
-      {/* )} */}
+      {standingsOptions === "Conference" && (
+        <Conference standings={ewStandings} />
+      )}
     </>
   );
 };
