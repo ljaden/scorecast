@@ -9,6 +9,8 @@ import Standings from "@/components/Standings/Standings";
 import Conference from "@/components/Standings/Conference";
 
 import { getStandings } from "@/utils/api/api";
+import { useQuery } from "@tanstack/react-query";
+import axiosFetcher from "@/utils/api/axiosFetcher";
 
 type AppProps = {
   standings: StandingsType;
@@ -30,22 +32,13 @@ type AppProps = {
 //   };
 // };
 
-export const getServerSideProps = async () => {
-  const standings = await getStandings();
-  const ewStandings = standingsEastWest(standings);
-  return {
-    props: {
-      standings,
-      ewStandings,
-    },
-  };
-};
-
-const StandingsPage: NextPageWithLayout<AppProps> = ({
-  standings,
-  ewStandings,
-}) => {
+const StandingsPage: NextPageWithLayout<AppProps> = ({ }) => {
   const [standingsOptions, setStandingsOptions] = useState<string>("Overall");
+  const { data } = useQuery<StandingsType>({
+    queryKey: ["standings"],
+    queryFn: () => axiosFetcher("/api/standings"),
+    onSuccess: (data) => console.log(data),
+  });
 
   return (
     <>
@@ -60,12 +53,12 @@ const StandingsPage: NextPageWithLayout<AppProps> = ({
           <option value="Conference">Conference</option>
         </select>
       </div>
-      {standingsOptions === "Overall" && (
-        <Standings standings={standings.standings} />
+      {data && standingsOptions === "Overall" && (
+        <Standings standings={data?.standings} />
       )}
-      {standingsOptions === "Conference" && (
-        <Conference standings={ewStandings} />
-      )}
+      {/* {standingsOptions === "Conference" && ( */}
+      {/*   <Conference standings={ewStandings} /> */}
+      {/* )} */}
     </>
   );
 };
