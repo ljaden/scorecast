@@ -28,7 +28,6 @@ export const getServerSideProps = async () => {
       standings,
       ewStandings,
     },
-    revalidate: 60,
   };
 };
 
