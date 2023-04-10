@@ -15,7 +15,7 @@ export default async function handler(
     // const url = `https://stats.nba.com/stats/leaguestandings?LeagueID=00&Season=2022-23&SeasonType=Regular+Season&SeasonYear=`;
     const { data: standings } = await axios.get(url, {
       headers: {
-        Referer: "https:www.nba.com/standings",
+        Referer: "https://www.nba.com/standings",
         // Host: "stats.nba.com",
       },
     });
