@@ -15,8 +15,19 @@ export default async function handler(
     // const url = `https://stats.nba.com/stats/leaguestandings?LeagueID=00&Season=2022-23&SeasonType=Regular+Season&SeasonYear=`;
     const { data: standings } = await axios.get(url, {
       headers: {
-        Referer: "https://www.nba.com/standings",
-        // Host: "stats.nba.com",
+        Host: "stats.nba.com",
+        Connection: "keep-alive",
+        Accept: "application/json, text/plain, */*",
+        "User-Agent":
+          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36",
+        Origin: "https://www.nba.com",
+        Referer: "https://www.nba.com/",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Accept-Language": "en-US,en;q=0.5",
+        "Sec-Fetch-Dest": "empty",
+        "Sec-Fetch-Mode": "cors",
+        "Sec-Fetch-Site": "same-site",
+        "Sec-GPC": "1",
       },
     });
 
