@@ -20,7 +20,7 @@ type AppProps = {
   };
 };
 
-export const getStaticProps = async () => {
+export const getServerSideProps = async () => {
   const standings = await getStandings();
   const ewStandings = standingsEastWest(standings);
   return {
