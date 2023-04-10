@@ -2,7 +2,7 @@ import Link from "next/link";
 
 const Navbar = ({ }) => {
   return (
-    <ul className="flex md:flex-col items-center justify-evenly border border-black">
+    <ul className="flex md:flex-col items-center justify-evenly p-4 bg-white shadow-2xl">
       <li>
         <Link href="/dashboard">Games</Link>
       </li>

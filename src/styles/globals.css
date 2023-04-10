@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  background: rgb(228, 231, 235);
+}
+
 /* Team Colors*/
 
 .ATL-color {

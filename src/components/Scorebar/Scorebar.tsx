@@ -29,7 +29,7 @@ const Scorebar = ({ data: schedule, displayStats }: Props) => {
 
   return (
     <>
-      <div className="flex gap-3 justify-between items-center border-b border-gray-300 py-4">
+      <div className="flex gap-3 justify-between items-center border-b border-gray-300 py-4 px-2 mb-4 bg-white shadow-2xl">
         <AiOutlineCaretLeft
           className="cursor-pointer"
           onClick={() => {
@@ -49,7 +49,7 @@ const Scorebar = ({ data: schedule, displayStats }: Props) => {
           schedule?.games.map((game) => (
             <li
               key={game.gameId}
-              className="w-48 border border-black my-1 pr-4 pl-4 pb-4 pt-1 hover:bg-red-300 whitespace-nowrap inline-block"
+              className="w-48 my-3 pr-4 pl-4 pb-4 pt-1 hover:bg-red-300 whitespace-nowrap inline-block bg-white shadow-2xl"
               onClick={() => displayStats(game)}
             >
               <Game {...game} />
