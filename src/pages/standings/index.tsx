@@ -37,12 +37,12 @@ const StandingsPage: NextPageWithLayout<AppProps> = ({
   ewStandings,
 }) => {
   const [standingsOptions, setStandingsOptions] = useState<string>("Overall");
-  const { data } = useQuery<StandingsType>({
-    queryKey: ["standings"],
-    queryFn: () => axiosFetcher("/api/standings"),
-    initialData: standings,
-    onSuccess: (data) => console.log(data),
-  });
+  // const { data } = useQuery<StandingsType>({
+  //   queryKey: ["standings"],
+  //   queryFn: () => axiosFetcher("/api/standings"),
+  //   initialData: standings,
+  //   onSuccess: (data) => console.log(data),
+  // });
 
   return (
     <>
@@ -57,7 +57,7 @@ const StandingsPage: NextPageWithLayout<AppProps> = ({
           <option value="Conference">Conference</option>
         </select>
       </div>
-      {data && standingsOptions === "Overall" && (
+      {standingsOptions === "Overall" && (
         <Standings standings={standings.standings} />
       )}
       {standingsOptions === "Conference" && (
