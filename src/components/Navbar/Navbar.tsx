@@ -2,7 +2,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 
 const navRoutes: { name: string; path: string }[] = [
-  { name: "Dashboard", path: "/dashboard" },
+  { name: "Home", path: "/" },
   { name: "Standings", path: "/standings" },
   { name: "Teams", path: "/teams" },
   { name: "Players", path: "/players" },
@@ -10,7 +10,6 @@ const navRoutes: { name: string; path: string }[] = [
 
 const Navbar = ({ }) => {
   const router = useRouter();
-  console.log(router);
 
   return (
     <nav>

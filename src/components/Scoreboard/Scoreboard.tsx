@@ -6,6 +6,8 @@ import Team from "./Team";
 import Period from "./Period";
 import PlayerStats from "./PlayerStats";
 
+import moment from "moment";
+
 type Props = ScheduleGameType & {
   returnHome: () => void;
 };
@@ -26,13 +28,19 @@ const Scoreboard = ({
     <section className="">
       <div className="bg-white shadow-2xl">
         <div className="w-full text-center p-2 relative">
-          <span className="absolute left-1 cursor-pointer flex items-center">
-            <IoReturnDownBackOutline onClick={returnHome} />
-            {/* <span className="invisible hover:visible">Back</span> */}
+          <span className="absolute left-1 bottom-3.5 cursor-pointer">
+            <IoReturnDownBackOutline onClick={returnHome} size={18} />
           </span>
-          <span className="uppercase text-lg font-semibold">
-            {gameStatusText}
-          </span>
+          {gameCode && gameStatus === 1 ? (
+            <span className="uppercase text-lg font-semibold">
+              {gameCodeToDT(gameCode)}
+              {gameStatusText}
+            </span>
+          ) : (
+            <span className="uppercase text-lg font-semibold">
+              {gameStatusText}
+            </span>
+          )}
         </div>
         <div className="grid grid-2 sm:grid-cols-2">
           <Team {...awayTeam} isHome={false} gameStatus={gameStatus} />
@@ -53,12 +61,15 @@ const Scoreboard = ({
             <PlayerStats gameId={gameId} />
           </div>
         )}
-
-        {/**/}
-        {gameStatus === 1 && <h1>UPCOMING GAME</h1>}
       </div>
     </section>
   );
+};
+
+//
+const gameCodeToDT = (gameCode: string) => {
+  let date = gameCode.split("/")[0];
+  return moment(date).format("ddd, MMM Do @ ");
 };
 
 export default Scoreboard;

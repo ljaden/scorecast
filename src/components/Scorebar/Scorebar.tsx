@@ -1,6 +1,4 @@
 import type { Scheduledata, ScheduleGameType } from "@/utils/types/index";
-import { useRouter } from "next/router";
-import { useEffect } from "react";
 
 // rtk context
 import type { RootState } from "@/RtkGlobals/store";
@@ -11,21 +9,14 @@ import { nextDate, prevDate } from "@/RtkGlobals/features/date/dateSlice";
 import Game from "../Game/Game";
 import { AiOutlineCaretLeft, AiOutlineCaretRight } from "react-icons/ai";
 
-import { getDailyGames } from "./utils/helpers";
-
 type Props = {
   data: Scheduledata | undefined;
   displayStats: (data: ScheduleGameType) => void;
 };
 
 const Scorebar = ({ data: schedule, displayStats }: Props) => {
-  const router = useRouter();
   const rtkDate = useSelector((state: RootState) => state.date);
   const rtkDispatch = useDispatch();
-
-  useEffect(() => {
-    router.push(`/dashboard?date=${rtkDate.dateFormatted}`);
-  }, [rtkDate.dateFormatted]);
 
   return (
     <>
@@ -45,7 +36,7 @@ const Scorebar = ({ data: schedule, displayStats }: Props) => {
         />
       </div>
       <ul className="flex justify-center gap-4 flex-wrap">
-        {schedule &&
+        {schedule ? (
           schedule?.games.map((game) => (
             <li
               key={game.gameId}
@@ -54,7 +45,10 @@ const Scorebar = ({ data: schedule, displayStats }: Props) => {
             >
               <Game {...game} />
             </li>
-          ))}
+          ))
+        ) : (
+          <span className="py-5">No Games</span>
+        )}
       </ul>
     </>
   );

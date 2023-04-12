@@ -1,34 +1,70 @@
-import { useEffect } from "react";
-import { useRouter } from "next/router";
-import Image from "next/image";
+import { useState } from "react";
+import type { ReactElement } from "react";
+import type { GetServerSideProps } from "next";
+import type { NextPageWithLayout } from "./_app";
+import type { Scheduledata, ScheduleGameType } from "@/utils/types";
 
-export default function Home() {
-  const router = useRouter();
+// rtk context
+import type { RootState } from "@/RtkGlobals/store";
+import { useSelector } from "react-redux";
 
-  useEffect(() => {
-    router.prefetch("/dashboard");
-  }, [router]);
+import Scorebar from "@/components/Scorebar/Scorebar";
+import Scoreboard from "@/components/Scoreboard/Scoreboard";
+import DashLayout from "@/components/Layouts/DashLayout";
 
-  useEffect(() => {
-    const redirectId = setTimeout(() => {
-      router.push("/dashboard");
-    }, 3000);
+import { getSchedule } from "@/utils/api/api";
+import { useQuery } from "@tanstack/react-query";
+import axiosFetcher from "@/utils/api/axiosFetcher";
 
-    return () => {
-      clearTimeout(redirectId);
-    };
-  }, [router]);
+type AppProps = {
+  schedule: Scheduledata;
+};
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const date = context.query;
+  const data = await getSchedule(typeof date === "string" ? date : "");
+
+  return {
+    props: {
+      schedule: data ?? null,
+    },
+  };
+};
+
+const HomePage: NextPageWithLayout<AppProps> = ({ schedule }) => {
+  const rtkDate = useSelector((state: RootState) => state.date);
+  const [showGameStats, setShowGameStats] = useState<boolean>(false);
+  const [singleGameStats, setSingleGameStats] =
+    useState<ScheduleGameType | null>(null);
+
+  const displayStats = (data: ScheduleGameType) => {
+    setShowGameStats(true);
+    setSingleGameStats(data);
+  };
+
+  const returnHome = () => {
+    setShowGameStats(false);
+    setSingleGameStats(null);
+  };
+
+  const { data } = useQuery<Scheduledata>({
+    queryKey: ["schedule", rtkDate.dateFormatted],
+    queryFn: () => axiosFetcher(`/api/schedule/${rtkDate.dateFormatted}`),
+    initialData: schedule,
+  });
 
   return (
-    <div className="flex items-center justify-center align-middle mt-32">
-      <Image
-        src={`/ball.png`}
-        alt="loading"
-        width={100}
-        height={100}
-        className="animate-bounce"
-        priority
-      ></Image>
-    </div>
+    <>
+      {!showGameStats && <Scorebar data={data} displayStats={displayStats} />}
+      {showGameStats && singleGameStats && (
+        <Scoreboard {...singleGameStats} returnHome={returnHome} />
+      )}
+    </>
   );
-}
+};
+
+HomePage.getLayout = function getLayout(page: ReactElement) {
+  return <DashLayout>{page}</DashLayout>;
+};
+
+export default HomePage;
