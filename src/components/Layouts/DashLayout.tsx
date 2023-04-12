@@ -12,7 +12,6 @@ const DashLayout = ({ children }: LayoutProps) => {
     <>
       <main className="flex flex-col md:flex-row gap-4 p-4">
         <aside className="w-full md:w-1/5">
-          {" "}
           <Navbar />
         </aside>
         <section className="w-full md:w-4/5">{children}</section>

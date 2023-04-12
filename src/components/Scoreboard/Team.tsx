@@ -30,7 +30,7 @@ const Team = ({
         <TeamLogo teamId={teamId} width={60} height={60} />
 
         <div className="flex flex-col items-center">
-          {wins && (
+          {!isNaN(wins) && (
             <span className="text-sm">
               ({wins}-{losses})
             </span>
