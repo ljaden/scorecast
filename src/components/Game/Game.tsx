@@ -30,7 +30,6 @@ const Game = ({
   const { data } = useQuery<GameType>({
     queryKey: ["gameInfo", gameId],
     queryFn: () => axiosFetcher(`/api/game/${gameId}`),
-    // onSuccess: (data) => setIsLive(data.gameStatus === 2),
     refetchInterval: (data) => (data?.gameStatus === 2 ? 10000 : false),
     enabled: isLive,
   });
@@ -40,7 +39,7 @@ const Game = ({
 
   return (
     <>
-      <div className="flex justify-between items-center mb-1 relative ">
+      <div className="flex justify-between items-center py-1.5 relative">
         {data?.gameStatus === 2 && (
           <Image src="/live.svg" width={15} height={15} alt="live"></Image>
         )}
@@ -75,7 +74,11 @@ const Game = ({
                 : ""
               } `}
           >
-            {isLive ? data?.awayTeam.score : awayTeam.score}
+            {isLive
+              ? data?.awayTeam.score
+              : awayTeam.score === 0
+                ? ""
+                : awayTeam.score}
           </span>
         </div>
         {/* homeTeam */}
@@ -98,7 +101,11 @@ const Game = ({
                 : ""
               } `}
           >
-            {isLive ? data?.homeTeam.score : homeTeam.score}
+            {isLive
+              ? data?.homeTeam.score
+              : homeTeam.score === 0
+                ? ""
+                : homeTeam.score}
           </span>
         </div>
       </div>

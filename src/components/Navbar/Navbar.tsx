@@ -1,24 +1,31 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
+
+const navRoutes: { name: string; path: string }[] = [
+  { name: "Home", path: "/" },
+  { name: "Standings", path: "/standings" },
+  { name: "Teams", path: "/teams" },
+  { name: "Players", path: "/players" },
+];
 
 const Navbar = ({ }) => {
+  const router = useRouter();
+
   return (
-    <ul className="flex md:flex-col items-center justify-evenly border border-black">
-      <li>
-        <Link href="/dashboard">Games</Link>
-      </li>
-      <li>
-        <Link href="/standings">Standings</Link>
-      </li>
-      <li>
-        <Link href="/players">Players</Link>
-      </li>
-      <li>
-        <Link href="/teams">Teams</Link>
-      </li>
-      <li>
-        <Link href="/live">Live</Link>
-      </li>
-    </ul>
+    <nav>
+      <ul className="flex md:flex-col items-center justify-evenly p-4 bg-white shadow-2xl">
+        {navRoutes.map((singleRoute) => (
+          <Link
+            key={singleRoute.name}
+            href={singleRoute.path}
+            className={`${router.pathname === singleRoute.path ? "font-bold" : ""
+              } py-2`}
+          >
+            {singleRoute.name}
+          </Link>
+        ))}
+      </ul>
+    </nav>
   );
 };
 

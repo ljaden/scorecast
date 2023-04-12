@@ -52,7 +52,7 @@ export type TeamStats = {
   statistics: TeamStatistics;
 };
 
-type Period = {
+export type Period = {
   period: number;
   periodType: string;
   score: number;
