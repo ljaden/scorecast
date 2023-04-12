@@ -1,78 +1,77 @@
 import { useState } from "react";
 
-import type { TeamStandings } from "@/utils/types";
+import type { Standings } from "@/pages/standings/index";
 import TeamLogo from "../TeamLogo/TeamLogo";
 
 type Props = {
-  standings: {
-    west: TeamStandings[];
-    east: TeamStandings[];
-  };
+  standings: Standings[];
 };
 
 const Standings = ({ standings }: Props) => {
-  const [displayEast, setDisplayEast] = useState<boolean>(true);
   return (
     <>
       <div className="flex justify-center m-2 gap-2">
-        <button
-          className={`${displayEast ? `bg-black text-white` : "text-gray-800"
-            }  font-bold py-2 px-8 rounded hover:scale-110 transition duration-200 ease-in-out`}
-          onClick={() => setDisplayEast(true)}
-        >
-          East
-        </button>
-        <button
-          className={`${!displayEast ? `bg-black text-white` : "text-gray-800"
-            } font-bold py-2 px-8 rounded hover:scale-110 transition duration-200 ease-in-out`}
-          onClick={() => setDisplayEast(false)}
-        >
-          West
-        </button>
+        {/* <button */}
+        {/*   className={`${displayEast ? `bg-black text-white` : "text-gray-800" */}
+        {/*     }  font-bold py-2 px-8 rounded hover:scale-110 transition duration-200 ease-in-out`} */}
+        {/*   onClick={() => setDisplayEast(true)} */}
+        {/* > */}
+        {/*   East */}
+        {/* </button> */}
+        {/* <button */}
+        {/*   className={`${!displayEast ? `bg-black text-white` : "text-gray-800" */}
+        {/*     } font-bold py-2 px-8 rounded hover:scale-110 transition duration-200 ease-in-out`} */}
+        {/*   onClick={() => setDisplayEast(false)} */}
+        {/* > */}
+        {/*   West */}
+        {/* </button> */}
       </div>
       <div className="w-full text-center">
         <div className="overflow-hidden">
           <table className="table-fixed w-full">
             <thead className="border-b">
               <tr className="font-bold">
-                <th className="w-3/12 capitalize text-gray-500">
-                  {displayEast ? "east" : "west"}
+                <th className="capitalize text-gray-500">
+                  {true ? "east" : "west"}
                 </th>
-                <th className="">W</th>
-                <th className="">L</th>
-                <th className="">W%</th>
-                <th className="">GP</th>
+                <th className="">OPP PPG</th>
+                <th className="">PPG</th>
+                <th className="">Diff</th>
+                <th className="">GB</th>
+                <th className="">Lost</th>
+                <th className="">Standings#</th>
                 <th className="">STRK</th>
+                <th className="">PCT</th>
+                <th className="">Wins</th>
+                <th className="">Record</th>
+                <th className="">Home Record</th>
+                <th className="">Away Record</th>
+                <th className="">Div Record</th>
+                <th className="">Conf Record</th>
                 <th className="">L10</th>
               </tr>
             </thead>
             <tbody>
-              {standings[displayEast ? "east" : "west"].map(
-                (team: TeamStandings, index: number) => (
-                  <tr key={team.TeamID} className="py-2 border-b">
-                    <td className="flex items-center gap-4">
-                      <span className="text-xs text-slate-500 pr-1">
-                        {index + 1}
-                      </span>
-                      <TeamLogo teamId={team.TeamID} width={25} height={25} />
-                      <span className="font-bold">{team.TeamName}</span>
-                    </td>
-                    <td>{team.WINS}</td>
-                    <td>{team.LOSSES}</td>
-                    <td>{team.WinPCT.toFixed(3).substring(1)}</td>
-                    <td>{team.WINS + team.LOSSES}</td>
-                    <td
-                      className={`${team.CurrentStreak > 0
-                          ? "text-green-700"
-                          : "text-rose-700"
-                        }`}
-                    >
-                      {team.strCurrentStreak}
-                    </td>
-                    <td>{team.L10}</td>
-                  </tr>
-                )
-              )}
+              {standings.map((team) => (
+                <tr key={team.team.abbrev} className="py-2 border-b">
+                  <span className="font-bold">{team.team.abbrev}</span>
+                  <td>{team.stats.opp_ppg}</td>
+                  <td>{team.stats.ppg}</td>
+                  <td>{team.stats.diff}</td>
+                  <td>{team.stats.gb}</td>
+                  <td>{team.stats.losses}</td>
+                  <td>{team.stats.rank}</td>
+                  <td>{team.stats.streak}</td>
+                  <td>{team.stats.pct}</td>
+                  <td>{team.stats.wins}</td>
+                  <td>{team.stats.record}</td>
+                  <td>{team.stats.home_record}</td>
+                  <td>{team.stats.away_record}</td>
+                  <td>{team.stats.div_record}</td>
+                  <td>{team.stats.conf_record}</td>
+                  <td>{team.stats.l10}</td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>

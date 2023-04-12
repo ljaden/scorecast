@@ -2,7 +2,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import type { StandingsType } from "@/utils/types";
 
-import { getStandings } from "@/utils/api/api";
 import axios from "axios";
 
 export default async function handler(

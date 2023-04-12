@@ -1,6 +1,7 @@
 import axios from "axios";
 
 import type { Scheduledata } from "@/utils/types";
+import type { Standings } from "@/pages/standings/index";
 
 // * Fetch complete 2022-2023 schedule
 export async function getFullSchedule() {
@@ -82,67 +83,59 @@ export async function getGameStats(gameId: string) {
 }
 
 // Fetch standings
-export async function getStandings() {
+export async function getStandingsByConf() {
   try {
-    const url = `https://stats.nba.com/stats/leaguestandingsv3?LeagueID=00&Season=2022-23&SeasonType=Regular%20Season&Section=overall`;
-    // const url = `https://stats.nba.com/stats/leaguestandings?LeagueID=00&Season=2022-23&SeasonType=Regular+Season&SeasonYear=`;
-    const { data: standings } = await axios.get(url, {
-      headers: {
-        Host: "stats.nba.com",
-        Connection: "keep-alive",
-        Accept: "application/json, text/plain, */*",
-        "User-Agent":
-          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36",
-        Origin: "https://www.nba.com",
-        Referer: "https://www.nba.com/",
-        "Accept-Encoding": "gzip, deflate, br",
-        "Accept-Language": "en-US,en;q=0.5",
-        "Sec-Fetch-Dest": "empty",
-        "Sec-Fetch-Mode": "cors",
-        "Sec-Fetch-Site": "same-site",
-        "Sec-GPC": "1",
-      },
-    });
+    const conference = `https://www.espn.com/nba/standings/`;
+    const league = `https://www.espn.com/nba/standings/_/group/league`;
+    const division = `https://www.espn.com/nba/standings/_/group/league`;
 
-    const selectedHeaders = [
-      "TeamID",
-      "TeamCity",
-      "TeamName",
-      "TeamSlug",
-      "Conference",
-      "ConferenceRecord",
-      "PlayoffRank",
-      "Division",
-      "DivisionRank",
-      "WINS",
-      "LOSSES",
-      "WinPCT",
-      "HOME",
-      "ROAD",
-      "L10",
-      "Last10Home",
-      "Last10Road",
-      "CurrentStreak",
-      "strCurrentStreak",
-    ];
-    const { headers, rowSet } = standings.resultSets[0];
+    const data = await getHTML(conference);
 
-    const result = rowSet.map((row: any) =>
-      row.reduce((obj: any, val: any, i: number) => {
-        if (selectedHeaders.includes(headers[i])) {
-          obj[headers[i]] = val;
-        }
-        return obj;
-      }, {})
-    );
+    // // drop empty `note` property
+    // delete data[0]["notes"];
+    // delete data[1]["notes"];
 
-    const data = {
-      season: standings.parameters.SeasonYear,
-      standings: result,
-    };
+    //
+    for (let i = 0; i < data.length; i++) {
+      // drop empty `note` property
+      delete data[i]["notes"];
+      //
+      data[i]["standings"].forEach((team: any, index: number) => {
+        data[i]["standings"][index]["stats"] = {
+          opp_ppg: team["stats"][0],
+          ppg: team["stats"][1],
+          diff: team["stats"][3],
+          gb: team["stats"][5],
+          losses: team["stats"][7],
+          rank: team["stats"][8],
+          streak: team["stats"][9],
+          pct: team["stats"][10],
+          wins: team["stats"][11],
+          record: team["stats"][12],
+          home_record: team["stats"][13],
+          away_record: team["stats"][14],
+          div_record: team["stats"][15],
+          conf_record: team["stats"][16],
+          l10: team["stats"][17],
+        };
+      });
+    }
+    // console.log(data[0]);
 
     return data;
   } catch (error) {
     throw error;
   }
+}
+
+async function getHTML(url: string) {
+  // fetch HTML site and parse out `standings table`
+  const { data } = await axios.get(url);
+
+  let json = data.substring(data.search(`{"app":`), data.length);
+  json = json.substring(0, json.search(`};`) + 1);
+  json = JSON.parse(json);
+  json = json.page.content.standings.groups.groups;
+
+  return json;
 }
