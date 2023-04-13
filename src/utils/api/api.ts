@@ -58,15 +58,6 @@ export async function getSchedule(dateParam?: string) {
   }
 }
 
-// * Fetch single game from Schedule
-// export async function getSingleGame(gameId: string){
-//   const res:Scheduledata = await getFullSchedule()
-//
-//   const singleGame = res.games.
-//
-//
-// }
-
 // * Fetch single game data
 export async function getGameStats(gameId: string) {
   // * @params
@@ -82,19 +73,14 @@ export async function getGameStats(gameId: string) {
   }
 }
 
-// Fetch standings
+// Fetch standings by Conference
 export async function getStandingsByConf() {
   try {
     const conference = `https://www.espn.com/nba/standings/`;
-    const league = `https://www.espn.com/nba/standings/_/group/league`;
-    const division = `https://www.espn.com/nba/standings/_/group/league`;
+    // const league = `https://www.espn.com/nba/standings/_/group/league`;
+    // const division = `https://www.espn.com/nba/standings/_/group/league`;
 
     const data = await getHTML(conference);
-
-    // // drop empty `note` property
-    // delete data[0]["notes"];
-    // delete data[1]["notes"];
-
     //
     for (let i = 0; i < data.length; i++) {
       // drop empty `note` property
@@ -120,7 +106,6 @@ export async function getStandingsByConf() {
         };
       });
     }
-    // console.log(data[0]);
 
     return data;
   } catch (error) {
