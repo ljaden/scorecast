@@ -45,7 +45,7 @@ const Scorebar = ({ data: schedule, displayStats }: Props) => {
           schedule?.games.map((game) => (
             <li
               key={game.gameId}
-              className="w-48 my-3 pr-4 pl-4 pb-4 pt-1 hover:bg-red-300 whitespace-nowrap inline-block bg-white shadow-2xl"
+              className="w-48 my-3 pr-4 pl-4 pb-4 pt-1 hover:bg-red-300 cursor-pointer whitespace-nowrap inline-block bg-white shadow-2xl"
               onClick={() => displayStats(game)}
             >
               <Game {...game} />
