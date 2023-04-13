@@ -1,6 +1,7 @@
 import axios from "axios";
 
 import type { Scheduledata } from "@/utils/types";
+import type { Standings } from "@/pages/standings/index";
 
 // * Fetch complete 2022-2023 schedule
 export async function getFullSchedule() {
@@ -57,15 +58,6 @@ export async function getSchedule(dateParam?: string) {
   }
 }
 
-// * Fetch single game from Schedule
-// export async function getSingleGame(gameId: string){
-//   const res:Scheduledata = await getFullSchedule()
-//
-//   const singleGame = res.games.
-//
-//
-// }
-
 // * Fetch single game data
 export async function getGameStats(gameId: string) {
   // * @params
@@ -81,66 +73,54 @@ export async function getGameStats(gameId: string) {
   }
 }
 
-// Fetch standings
-export async function getStandings() {
+// Fetch standings by Conference
+export async function getStandingsByConf() {
   try {
-    const url = `https://stats.nba.com/stats/leaguestandingsv3?LeagueID=00&Season=2022-23&SeasonType=Regular%20Season&Section=overall`;
-    const { data: standings } = await axios.get(url, {
-      headers: {
-        Host: "stats.nba.com",
-        "User-Agent":
-          "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:72.0) Gecko/20100101 Firefox/72.0",
-        Accept: "application/json, text/plain, */*",
-        "Accept-Language": "en-US,en;q=0.5",
-        "Accept-Encoding": "gzip, deflate, br",
-        "x-nba-stats-origin": "stats",
-        "x-nba-stats-token": "true",
-        Connection: "keep-alive",
-        Referer: "https://stats.nba.com/",
-        Pragma: "no-cache",
-        "Cache-Control": "no-cache",
-      },
-    });
+    const conference = `https://www.espn.com/nba/standings/`;
+    // const league = `https://www.espn.com/nba/standings/_/group/league`;
+    // const division = `https://www.espn.com/nba/standings/_/group/league`;
 
-    const selectedHeaders = [
-      "TeamID",
-      "TeamCity",
-      "TeamName",
-      "TeamSlug",
-      "Conference",
-      "ConferenceRecord",
-      "PlayoffRank",
-      "Division",
-      "DivisionRank",
-      "WINS",
-      "LOSSES",
-      "WinPCT",
-      "HOME",
-      "ROAD",
-      "L10",
-      "Last10Home",
-      "Last10Road",
-      "CurrentStreak",
-      "strCurrentStreak",
-    ];
-    const { headers, rowSet } = standings.resultSets[0];
-
-    const result = rowSet.map((row: any) =>
-      row.reduce((obj: any, val: any, i: number) => {
-        // if (selectedHeaders.includes(headers[i])) {
-        obj[headers[i]] = val;
-        // }
-        return obj;
-      }, {})
-    );
-
-    const data = {
-      season: standings.parameters.SeasonYear,
-      standings: result,
-    };
+    const data = await getHTML(conference);
+    //
+    for (let i = 0; i < data.length; i++) {
+      // drop empty `note` property
+      delete data[i]["notes"];
+      //
+      data[i]["standings"].forEach((team: any, index: number) => {
+        data[i]["standings"][index]["stats"] = {
+          opp_ppg: team["stats"][0],
+          ppg: team["stats"][1],
+          diff: team["stats"][3],
+          gb: team["stats"][5],
+          losses: team["stats"][7],
+          rank: team["stats"][8],
+          streak: team["stats"][9],
+          pct: team["stats"][10],
+          wins: team["stats"][11],
+          record: team["stats"][12],
+          home_record: team["stats"][13],
+          away_record: team["stats"][14],
+          div_record: team["stats"][15],
+          conf_record: team["stats"][16],
+          l10: team["stats"][17],
+        };
+      });
+    }
 
     return data;
   } catch (error) {
     throw error;
   }
+}
+
+async function getHTML(url: string) {
+  // fetch HTML site and parse out `standings table`
+  const { data } = await axios.get(url);
+
+  let json = data.substring(data.search(`{"app":`), data.length);
+  json = json.substring(0, json.search(`};`) + 1);
+  json = JSON.parse(json);
+  json = json.page.content.standings.groups.groups;
+
+  return json;
 }

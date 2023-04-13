@@ -1,86 +1,126 @@
-import { GetStaticProps } from "next";
 import { useState } from "react";
 
 import type { NextPageWithLayout } from "../_app";
 import type { ReactElement } from "react";
-import type { StandingsType } from "@/utils/types";
 
 import DashLayout from "@/components/Layouts/DashLayout";
 import Standings from "@/components/Standings/Standings";
 import Conference from "@/components/Standings/Conference";
 
-import { getStandings } from "@/utils/api/api";
-import { useQuery } from "@tanstack/react-query";
-import axiosFetcher from "@/utils/api/axiosFetcher";
+import { getStandingsByConf } from "@/utils/api/api";
 
 type AppProps = {
-  standings: StandingsType;
+  standings: {
+    abbreviation: string;
+    name: string;
+    standings: Standings[];
+  }[];
+};
+
+export type Standings = {
+  team: {
+    id: string;
+    abbrev: string;
+    displayName: string;
+    shortDisplayName: string;
+    logo: string;
+    uid: string;
+    recordSummary: string;
+    standingSummary: string;
+    location: string;
+    links: string;
+  };
+  stats: {
+    opp_ppg: string;
+    ppg: string;
+    diff: string;
+    gb: string;
+    losses: string;
+    rank: string;
+    streak: string;
+    pct: string;
+    wins: string;
+    record: string;
+    home_record: string;
+    away_record: string;
+    div_record: string;
+    conf_record: string;
+    l10: string;
+  };
 };
 
 export const getServerSideProps = async () => {
-  const data = await getStandings();
+  const standings = await getStandingsByConf();
   return {
     props: {
-      standings: data,
+      standings,
     },
   };
 };
 
 const StandingsPage: NextPageWithLayout<AppProps> = ({ standings }) => {
-  const [filterSettings, setFilterSettings] = useState<string>("Overall");
-  const { data } = useQuery<StandingsType>({
-    queryKey: ["standings"],
-    queryFn: () => axiosFetcher("/api/standings"),
-    initialData: standings,
-  });
-
-  let filterStandings: any;
-
-  switch (filterSettings) {
-    case "Division":
-      filterStandings = {
-        alantic: data.standings.filter((team) => team.Division === "Alantic"),
-        northwest: data.standings.filter(
-          (team) => team.Division === "Northwest"
-        ),
-        southeast: data.standings.filter(
-          (team) => team.Division === "Southeast"
-        ),
-        central: data.standings.filter((team) => team.Division === "Central"),
-        pacific: data.standings.filter((team) => team.Division === "Pacific"),
-        southwest: data.standings.filter(
-          (team) => team.Division === "Southwest"
-        ),
-      };
-      break;
-    case "Conference":
-      filterStandings = {
-        west: data.standings.filter((team) => team.Conference === "West"),
-        east: data.standings.filter((team) => team.Conference === "East"),
-      };
-      break;
-  }
+  const [conf, setConf] = useState<"east" | "west">("east");
+  console.log(standings);
 
   return (
     <>
-      <div className="flex justify-between p-4">
+      <div className="flex justify-between p-4 bg-white shadow-2xl">
         <span className="font-extrabold text-2xl">Standings</span>
-        <select
-          name=""
-          id=""
-          onChange={(e) => setFilterSettings(e.target.value)}
-        >
-          <option value="Overall">Overall</option>
-          <option value="Conference">Conference</option>
-          <option value="Division" disabled>
-            Division(WIP)
-          </option>
-        </select>
+        <div className="flex flex-col items-center">
+          <label
+            htmlFor="groupby"
+            className="text-sm font-medium text-gray-400"
+          >
+            Group By
+          </label>
+          <select
+            name="groupby"
+            id=""
+            // onChange={(e) => setStandingOptions(e.target.value)}
+            className="p-1"
+          >
+            <option value="Conference">Conference</option>
+            <option value="Overall">Overall</option>
+          </select>
+        </div>
       </div>
-      {filterSettings === "Overall" && <Standings standings={data.standings} />}
-      {filterStandings && filterSettings === "Conference" && (
-        <Conference standings={filterStandings} />
+
+      <div className="flex justify-center m-2 gap-2 pt-4 pb-1">
+        <button
+          className={`${conf === "east" ? `bg-black text-white` : "text-gray-800"
+            }  font-bold py-2 px-8 rounded hover:scale-110 transition duration-200 ease-in-out`}
+          onClick={() => setConf("east")}
+        >
+          East
+        </button>
+        <button
+          className={`${conf === "west" ? `bg-black text-white` : "text-gray-800"
+            } font-bold py-2 px-8 rounded hover:scale-110 transition duration-200 ease-in-out`}
+          onClick={() => setConf("west")}
+        >
+          West
+        </button>
+      </div>
+
+      {conf === "east" && (
+        <Conference
+          standings={standings[0].standings}
+          conference={standings[0].abbreviation}
+        />
       )}
+      {conf === "west" && (
+        <Conference
+          standings={standings[1].standings}
+          conference={standings[1].abbreviation}
+        />
+      )}
+
+      {/* {standingsOptions === "Overall" && ( */}
+      {/*   <Standings standings={standings.standings} /> */}
+      {/* )} */}
+      {/* {standingsOptions === "Conference" && ( */}
+      {/*   <Conference standings={ewStandings} /> */}
+      {/* )} */}
     </>
   );
 };

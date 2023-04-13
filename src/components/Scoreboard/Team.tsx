@@ -5,6 +5,7 @@ import TeamLogo from "../TeamLogo/TeamLogo";
 type Props = Team & {
   isHome: boolean;
   gameStatus: number;
+  liveScore?: number;
 };
 
 const Team = ({
@@ -17,10 +18,12 @@ const Team = ({
   teamCity,
   teamName,
   score,
+  liveScore,
 }: Props) => {
+  // console.log(score, "score");
   return (
     <div
-      className={`min-w-full py-6 px-4 flex ${isHome ? "" : "sm:flex-row-reverse"
+      className={`min-w-full py-6 px-4 flex ${isHome ? "sm:flex-row-reverse" : ""
         } justify-between items-center text-white ${teamTricode}-color`}
     >
       <div
@@ -43,7 +46,7 @@ const Team = ({
         className={`${gameStatus === 1 ? "hidden" : ""
           } text-3xl font-extrabold transition-colors duration-700 ease-in-out transform`}
       >
-        {score}
+        {liveScore ?? score}
       </span>
     </div>
   );
