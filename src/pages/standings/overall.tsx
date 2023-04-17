@@ -2,13 +2,14 @@ import { GetServerSideProps } from "next";
 
 import type { NextPageWithLayout } from "../_app";
 import type { ReactElement } from "react";
+import type { Standings } from "@/pages/standings/index";
 
 import DashLayout from "@/components/Layouts/DashLayout";
 import StandingsLayout from "@/components/Layouts/StandingsLayout";
 
-import Conference from "@/components/Standings/Conference";
+import Overall from "@/components/Standings/Overall";
 
-import { getStandingsByConf } from "@/utils/api/api";
+import { getStandings } from "@/utils/api/api";
 
 type AppProps = {
   standings: {
@@ -18,41 +19,9 @@ type AppProps = {
   }[];
 };
 
-export type Standings = {
-  team: {
-    id: string;
-    abbrev: string;
-    displayName: string;
-    shortDisplayName: string;
-    logo: string;
-    uid: string;
-    recordSummary: string;
-    standingSummary: string;
-    location: string;
-    links: string;
-  };
-  stats: {
-    opp_ppg: string;
-    ppg: string;
-    diff: string;
-    gb: string;
-    losses: string;
-    rank: string;
-    streak: string;
-    pct: string;
-    wins: string;
-    record: string;
-    home_record: string;
-    away_record: string;
-    div_record: string;
-    conf_record: string;
-    l10: string;
-  };
-};
-
 // export const getServerSideProps: GetServerSideProps = async () => {
 export const getStaticProps = async () => {
-  const standings = await getStandingsByConf();
+  const standings = await getStandings();
 
   return {
     props: {
@@ -63,11 +32,9 @@ export const getStaticProps = async () => {
 };
 
 const StandingsPage: NextPageWithLayout<AppProps> = ({ standings }) => {
-  console.log(standings);
-
   return (
     <>
-      <Conference standings={standings} />
+      <Overall standings={standings[0].standings} />
     </>
   );
 };
