@@ -5,20 +5,25 @@ import type { Standings } from "@/pages/standings/index";
 import DashLayout from "@/components/Layouts/DashLayout";
 import StandingsLayout from "@/components/Layouts/StandingsLayout";
 
-import Overall from "@/components/Standings/Overall";
+import Division from "@/components/Standings/Division";
 
-import { getStandings } from "@/utils/api/api";
+import { getStandingsByDiv } from "@/utils/api/api";
 
 type AppProps = {
   standings: {
-    abbreviation: string;
     name: string;
-    standings: Standings[];
+    children: ChildrenProp[];
   }[];
 };
 
+type ChildrenProp = {
+  abbreviation: string;
+  name: string;
+  standings: Standings[];
+};
+
 export const getStaticProps = async () => {
-  const standings = await getStandings();
+  const standings = await getStandingsByDiv();
 
   return {
     props: {
@@ -28,19 +33,21 @@ export const getStaticProps = async () => {
   };
 };
 
-const OverallPage: NextPageWithLayout<AppProps> = ({ standings }) => {
+const DivisionPage: NextPageWithLayout<AppProps> = ({ standings }) => {
   return (
     <>
-      <Overall standings={standings[0].standings} />
+      {standings.map((standing) => (
+        <Division key={standing.name} standings={standing} />
+      ))}
     </>
   );
 };
 
-OverallPage.getLayout = function getLayout(page: ReactElement) {
+DivisionPage.getLayout = function getLayout(page: ReactElement) {
   return (
     <DashLayout>
       <StandingsLayout>{page}</StandingsLayout>
     </DashLayout>
   );
 };
-export default OverallPage;
+export default DivisionPage;

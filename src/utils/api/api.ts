@@ -102,6 +102,23 @@ export async function getStandings() {
   }
 }
 
+// Fetch standings by Conference
+export async function getStandingsByDiv() {
+  try {
+    const division = `https://www.espn.com/nba/standings/_/group/division`;
+
+    const res = await getHTML(division);
+
+    for (let i = 0; i < res.length; i++) {
+      filterStandings(res[i].children);
+    }
+
+    return res;
+  } catch (error) {
+    throw error;
+  }
+}
+
 async function getHTML(url: string) {
   // fetch HTML site and parse out `standings table`
   const { data } = await axios.get(url);

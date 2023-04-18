@@ -29,12 +29,11 @@ const StandingsLayout = ({ children }: LayoutProps) => {
                 shallow: true,
               })
             }
-            // value={value}
             className="p-1"
           >
             <option value="">Conference</option>
             <option value="overall">Overall</option>
-            <option value="div">Division</option>
+            <option value="division">Division</option>
           </select>
         </div>
       </div>

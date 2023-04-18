@@ -1,5 +1,3 @@
-import { GetServerSideProps } from "next";
-
 import type { NextPageWithLayout } from "../_app";
 import type { ReactElement } from "react";
 
@@ -50,7 +48,6 @@ export type Standings = {
   };
 };
 
-// export const getServerSideProps: GetServerSideProps = async () => {
 export const getStaticProps = async () => {
   const standings = await getStandingsByConf();
 
@@ -58,13 +55,11 @@ export const getStaticProps = async () => {
     props: {
       standings,
     },
-    revalidate: 60,
+    revalidate: 120,
   };
 };
 
 const StandingsPage: NextPageWithLayout<AppProps> = ({ standings }) => {
-  console.log(standings);
-
   return (
     <>
       <Conference standings={standings} />
