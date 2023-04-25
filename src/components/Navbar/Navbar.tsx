@@ -11,6 +11,7 @@ const navRoutes: { name: string; path: string }[] = [
 const Navbar = ({ }) => {
   const router = useRouter();
 
+  console.log(router.pathname);
   return (
     <nav>
       <ul className="flex md:flex-col items-center justify-evenly p-4 bg-white shadow-2xl">
@@ -18,7 +19,10 @@ const Navbar = ({ }) => {
           <Link
             key={singleRoute.name}
             href={singleRoute.path}
-            className={`${router.pathname === singleRoute.path ? "font-bold" : ""
+            className={`${router.pathname === singleRoute.path ||
+                router.pathname.startsWith(singleRoute.path + "/")
+                ? "font-bold"
+                : ""
               } py-2`}
           >
             {singleRoute.name}

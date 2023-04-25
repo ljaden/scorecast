@@ -1,7 +1,6 @@
 import axios from "axios";
 
 import type { Scheduledata } from "@/utils/types";
-import type { Standings } from "@/pages/standings/index";
 
 // * Fetch complete 2022-2023 schedule
 export async function getFullSchedule() {
@@ -78,36 +77,43 @@ export async function getStandingsByConf() {
   try {
     const conference = `https://www.espn.com/nba/standings/`;
     // const league = `https://www.espn.com/nba/standings/_/group/league`;
-    // const division = `https://www.espn.com/nba/standings/_/group/league`;
+    // const division = `https://www.espn.com/nba/standings/_/group/division`;
 
-    const data = await getHTML(conference);
-    //
-    for (let i = 0; i < data.length; i++) {
-      // drop empty `note` property
-      delete data[i]["notes"];
-      //
-      data[i]["standings"].forEach((team: any, index: number) => {
-        data[i]["standings"][index]["stats"] = {
-          opp_ppg: team["stats"][0],
-          ppg: team["stats"][1],
-          diff: team["stats"][3],
-          gb: team["stats"][5],
-          losses: team["stats"][7],
-          rank: team["stats"][8],
-          streak: team["stats"][9],
-          pct: team["stats"][10],
-          wins: team["stats"][11],
-          record: team["stats"][12],
-          home_record: team["stats"][13],
-          away_record: team["stats"][14],
-          div_record: team["stats"][15],
-          conf_record: team["stats"][16],
-          l10: team["stats"][17],
-        };
-      });
-    }
+    const res = await getHTML(conference);
+    const data = filterStandings(res);
 
     return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+// Fetch overall standings of league
+export async function getStandings() {
+  try {
+    const league = `https://www.espn.com/nba/standings/_/group/league`;
+
+    const res = await getHTML(league);
+    const data = filterStandings(res);
+
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+// Fetch standings by Conference
+export async function getStandingsByDiv() {
+  try {
+    const division = `https://www.espn.com/nba/standings/_/group/division`;
+
+    const res = await getHTML(division);
+
+    for (let i = 0; i < res.length; i++) {
+      filterStandings(res[i].children);
+    }
+
+    return res;
   } catch (error) {
     throw error;
   }
@@ -123,4 +129,49 @@ async function getHTML(url: string) {
   json = json.page.content.standings.groups.groups;
 
   return json;
+}
+
+function filterStandings(data: any) {
+  type team = {
+    stats: string[];
+    team: {
+      abbrev: string;
+      displayName: string;
+      id: string;
+      links: string;
+      location: string;
+      logo: string;
+      recordSummary: string;
+      shortDisplayName: string;
+      standingSummary: string;
+      uid: string;
+    };
+  };
+
+  for (let i = 0; i < data.length; i++) {
+    //
+    delete data[i]["notes"];
+
+    data[i]["standings"].forEach((team: team, index: number) => {
+      data[i]["standings"][index]["stats"] = {
+        opp_ppg: team["stats"][0],
+        ppg: team["stats"][1],
+        diff: team["stats"][3],
+        gb: team["stats"][5],
+        losses: team["stats"][7],
+        rank: team["stats"][8],
+        streak: team["stats"][9],
+        pct: team["stats"][10],
+        wins: team["stats"][11],
+        record: team["stats"][12],
+        home_record: team["stats"][13],
+        away_record: team["stats"][14],
+        div_record: team["stats"][15],
+        conf_record: team["stats"][16],
+        l10: team["stats"][17],
+      };
+    });
+  }
+
+  return data;
 }
