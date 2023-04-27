@@ -30,8 +30,9 @@ export const useTeamAndPlayersInfo = () => {
         setPlayerInfo(mapPlayerInfo(dataPoints[0].data));
         const test = mapTeamInfo(dataPoints[1].data);
         setTeamInfo(test);
-      } catch (error) {
+      } catch (error: any) {
         console.log("Something went wrong.");
+
         if (error.response) {
           // The request was made and the server responded with a status code
           // that falls out of the range of 2xx
@@ -45,7 +46,6 @@ export const useTeamAndPlayersInfo = () => {
           // Something happened in setting up the request that triggered an Error
           console.log("Error", error.message);
         }
-        console.log(error.config);
       }
     }
     getData();
