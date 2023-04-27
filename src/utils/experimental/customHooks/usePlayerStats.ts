@@ -16,24 +16,42 @@ export const usePlayerStats = (
 ) => {
   const [playerStats, setPlayerStats] = useState([]);
   const [isFetchingPlayerStats, setIsFetchingPlayerStats] = useState(false);
+  const [isError, setIsError] = useState<boolean>(false);
+
   useEffect(() => {
     async function getPlayerStats() {
-      const playerStatsUrl = LOCAL_HOST + PLAYER_STATS_API;
-      const request = createRequestBody();
-      addSelectedPlayer(request, selectedPlayer);
-      addOpposingTeam(request, opposingTeam);
-      addDates(request, dates);
-      setIsFetchingPlayerStats(true);
-      const { data } = await axios.post(playerStatsUrl, request);
-      setIsFetchingPlayerStats(false);
-      const mappedData = mapPlayerStats(data);
-      setPlayerStats(mappedData);
+      const controller = new AbortController();
+      try {
+        const playerStatsUrl = LOCAL_HOST + PLAYER_STATS_API;
+        const request = createRequestBody();
+        addSelectedPlayer(request, selectedPlayer);
+        addOpposingTeam(request, opposingTeam);
+        addDates(request, dates);
+        setIsFetchingPlayerStats(true);
+        const { data } = await axios.post(playerStatsUrl, request, {
+          signal: controller.signal,
+        });
+        setIsFetchingPlayerStats(false);
+        const mappedData = mapPlayerStats(data);
+        setPlayerStats(mappedData);
+      } catch (error: any) {
+        console.log("usePlayerStats fetch error");
+        setIsFetchingPlayerStats(false);
+        setIsError(true);
+        if (error.name === "AbortController") {
+          console.log("Request Aborted");
+        }
+      }
+
+      controller.abort();
     }
+
     if (gamesOrPlayersFlag === PLAYERS_CONSTANT) {
       getPlayerStats();
     }
   }, [selectedPlayer, opposingTeam, dates]);
-  return [playerStats, setPlayerStats, isFetchingPlayerStats];
+
+  return [playerStats, setPlayerStats, isFetchingPlayerStats, isError];
 };
 
 function addWhereClause(request, condition) {

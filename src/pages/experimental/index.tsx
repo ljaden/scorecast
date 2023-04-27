@@ -13,6 +13,9 @@ import {
   findAvgStatsForGames,
   dateString,
 } from "@/utils/experimental/helpers/helperFunctions";
+import "react-dates/initialize";
+import { DateRangePicker } from "react-dates";
+import "react-dates/lib/css/_datepicker.css";
 
 // mui
 import Button from "@mui/material/Button";
@@ -29,7 +32,7 @@ import { TeamAverageStatsForm } from "@/components/Experimental/TeamAverageStats
 // Layout
 import DashLayout from "@/components/Layouts/DashLayout";
 
-import moment from "moment";
+import moment, { Moment } from "moment";
 
 const ExperimentalPage: NextPageWithLayout = () => {
   const [selectedPlayer, setSelectedPlayer] = useState({});
@@ -37,10 +40,14 @@ const ExperimentalPage: NextPageWithLayout = () => {
   const [opposingTeamForPlayers, setOpposingTeamForPlayers] = useState({});
   const [opposingTeamForGames, setOpposingTeamForGames] = useState({});
 
-  const [startDate, setStartDate] = useState(moment().subtract(1, "days"));
-  const [endDate, setEndDate] = useState(moment().subtract(1, "days"));
+  const [startDate, setStartDate] = useState<Moment | null>(
+    moment().subtract(1, "days")
+  );
+  const [endDate, setEndDate] = useState<Moment | null>(
+    moment().subtract(1, "days")
+  );
   const [dates, setDates] = useState<string[]>([]);
-  const [focusedInput, setFocusedInput] = useState(null);
+  const [focusedInput, setFocusedInput] = useState<any>(null);
 
   const [actualNumGames, setActualGames] = useState(0);
   const [numGames, setNumGames] = useState(0);
@@ -68,12 +75,13 @@ const ExperimentalPage: NextPageWithLayout = () => {
 
   const [playerInfo, teamInfo] = useTeamAndPlayersInfo();
 
-  const [playerStats, setPlayerStats, isFetchingPlayerStats] = usePlayerStats(
-    gamesOrPlayersFlag,
-    selectedPlayer,
-    opposingTeamForPlayers,
-    dates
-  );
+  const [playerStats, setPlayerStats, isFetchingPlayerStats, isError] =
+    usePlayerStats(
+      gamesOrPlayersFlag,
+      selectedPlayer,
+      opposingTeamForPlayers,
+      dates
+    );
 
   const [gameStats, setGameStats, isFetchingGameStats] = useGameStats(
     gamesOrPlayersFlag,
@@ -127,8 +135,8 @@ const ExperimentalPage: NextPageWithLayout = () => {
           />
         )}
 
-        <div id="calendar-group" style={{}}>
-          {/*<DateRangePicker
+        <div id="calendar-group">
+          <DateRangePicker
             startDate={startDate}
             startDateId="start_date_id"
             endDate={endDate}
@@ -140,8 +148,9 @@ const ExperimentalPage: NextPageWithLayout = () => {
             focusedInput={focusedInput}
             onFocusChange={(fi) => setFocusedInput(fi)}
             isOutsideRange={(day) => day.isAfter(moment().subtract(1, "day"))}
-          />*/}
-          <div style={{ display: "flex", flexDirection: "row" }}>
+          />
+
+          <div className="flex flex-row">
             <Button type="submit" onClick={applyDates}>
               Apply Dates
             </Button>
@@ -181,6 +190,7 @@ const ExperimentalPage: NextPageWithLayout = () => {
             <PlayersGrid
               playerStats={playerStats}
               isFetchingPlayerStats={isFetchingPlayerStats}
+              isError={isError}
             />
           ) : (
             <GamesGrid

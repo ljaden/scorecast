@@ -612,6 +612,15 @@
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.5.tgz#5f19d2b85a98e9558036f6a3cacc8819420f05cf"
   integrity sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==
 
+"@types/react-dates@^21.8.3":
+  version "21.8.3"
+  resolved "https://registry.yarnpkg.com/@types/react-dates/-/react-dates-21.8.3.tgz#dc4e71f83d09979b1c4f355c267e52a850d0fe2c"
+  integrity sha512-MSG/A5UCXepPw5a9BtdOXfCCSMcQ5+oQIkm0K2u39sf4EJbsgngUg1zcoY3amxa6Hz0EWZkZOiExK/92J6hxUw==
+  dependencies:
+    "@types/react" "*"
+    "@types/react-outside-click-handler" "*"
+    moment "^2.26.0"
+
 "@types/react-dom@18.0.11":
   version "18.0.11"
   resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-18.0.11.tgz#321351c1459bc9ca3d216aefc8a167beec334e33"
@@ -625,6 +634,13 @@
   integrity sha512-FLzd0K9pnaEvKz4D1vYxK9JmgQPiGk1lu23o1kqGsLeT0iPbRSF7b76+S5T9fD8aRa0B8bY7I/3DebEj+1ysBA==
   dependencies:
     "@types/react" "^17"
+
+"@types/react-outside-click-handler@*":
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/@types/react-outside-click-handler/-/react-outside-click-handler-1.3.1.tgz#e4772ba550e1a548468203194d2615d8f06acdf9"
+  integrity sha512-0BNan5zIIDyO5k9LFSG+60ZxQ/0wf+LTF9BJx3oOUdOaJlZk6RCe52jRB75mlvLLJx2YLa61+NidOwBfptWMKw==
+  dependencies:
+    "@types/react" "*"
 
 "@types/react-transition-group@^4.4.5":
   version "4.4.5"
@@ -2336,7 +2352,7 @@ minimist@^1.2.0, minimist@^1.2.6:
   resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.8.tgz#c1a464e7693302e082a075cee0c057741ac4772c"
   integrity sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==
 
-moment@>=1.6.0, moment@^2.29.4:
+moment@>=1.6.0, moment@^2.26.0, moment@^2.29.4:
   version "2.29.4"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.29.4.tgz#3dbe052889fe7c1b2ed966fcb3a77328964ef108"
   integrity sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==
@@ -2807,6 +2823,17 @@ react-with-styles@^4.1.0:
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/react-with-styles/-/react-with-styles-4.2.0.tgz#0b8a8e5d94d082518b9f564f6fcf6103e28096c5"
   integrity sha512-tZCTY27KriRNhwHIbg1NkSdTTOSfXDg6Z7s+Q37mtz0Ym7Sc7IOr3PzVt4qJhJMW6Nkvfi3g34FuhtiGAJCBQA==
+  dependencies:
+    airbnb-prop-types "^2.14.0"
+    hoist-non-react-statics "^3.2.1"
+    object.assign "^4.1.0"
+    prop-types "^15.7.2"
+    react-with-direction "^1.3.1"
+
+react-with-styles@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/react-with-styles/-/react-with-styles-5.0.0.tgz#16f4605b6312dffdc37606f7d4b9c24f99344291"
+  integrity sha512-baXsFjefgJJ/YDlxbBdonPtIjv79tNocUF+7e1yS4YqBoDTFPuK5Smncj7zpCZdOBAmcafW5RT027A9NP3kHaw==
   dependencies:
     airbnb-prop-types "^2.14.0"
     hoist-non-react-statics "^3.2.1"
