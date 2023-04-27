@@ -16,31 +16,46 @@ export const useGameStats = (
 ) => {
   const [gameStats, setGameStats] = useState([]);
   const [isFetchingGameStats, setIsFetchingGameStats] = useState(false);
+  const [isErrorGameStats, setIsErrorGameStats] = useState<boolean>(false);
 
   useEffect(() => {
     async function getGameStats() {
-      const gameInfoUrl = LOCAL_HOST + GAME_INFO_API;
-      const request = createRequestBody();
-      addSelectedTeam(request, selectedTeam);
-      addDates(request, dates);
-      let mappedData;
+      const controller = new AbortController();
 
-      if (Object.keys(opposingTeamForGames).length > 0) {
-        mappedData = addOpposingTeam([...gameStats], opposingTeamForGames);
-      } else {
-        setIsFetchingGameStats(true);
-        let response = await axios.post(gameInfoUrl, request);
+      try {
+        const gameInfoUrl = LOCAL_HOST + GAME_INFO_API;
+        const request = createRequestBody();
+        addSelectedTeam(request, selectedTeam);
+        addDates(request, dates);
+        let mappedData;
+
+        if (Object.keys(opposingTeamForGames).length > 0) {
+          mappedData = addOpposingTeam([...gameStats], opposingTeamForGames);
+        } else {
+          setIsFetchingGameStats(true);
+          let response = await axios.post(gameInfoUrl, request, {
+            signal: controller.signal,
+          });
+          setIsFetchingGameStats(false);
+          mappedData = mapGameStats(response.data);
+        }
+        setGameStats(mappedData);
+      } catch (error: any) {
+        console.log("usePlayerStats fetch error");
         setIsFetchingGameStats(false);
-        mappedData = mapGameStats(response.data);
+        setIsErrorGameStats(true);
+
+        if (error.name === "AbortController") {
+          console.log("Request Aborted");
+        }
       }
-      setGameStats(mappedData);
     }
 
     if (gamesOrPlayersFlag === GAMES_CONSTANT) {
       getGameStats();
     }
   }, [selectedTeam, opposingTeamForGames, dates]);
-  return [gameStats, setGameStats, isFetchingGameStats];
+  return [gameStats, setGameStats, isFetchingGameStats, isErrorGameStats];
 };
 
 function addSelectedTeam(request, selectedTeam) {

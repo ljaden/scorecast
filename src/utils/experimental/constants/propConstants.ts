@@ -1,7 +1,7 @@
-// export const LOCAL_HOST =
-// "http://player-props-co.us-east-1.elasticbeanstalk.com/api/v1/";
+export const LOCAL_HOST =
+  "http://player-props-co.us-east-1.elasticbeanstalk.com/api/v1/";
 
-export const LOCAL_HOST = "http://localhost:5000/api/v1/";
+// export const LOCAL_HOST = "http://localhost:5000/api/v1/";
 
 export const PLAYER_INFO_API = "player-info-data";
 

@@ -75,20 +75,20 @@ const ExperimentalPage: NextPageWithLayout = () => {
 
   const [playerInfo, teamInfo] = useTeamAndPlayersInfo();
 
-  const [playerStats, setPlayerStats, isFetchingPlayerStats, isError] =
-    usePlayerStats(
-      gamesOrPlayersFlag,
-      selectedPlayer,
-      opposingTeamForPlayers,
-      dates
-    );
-
-  const [gameStats, setGameStats, isFetchingGameStats] = useGameStats(
+  const [
+    playerStats,
+    setPlayerStats,
+    isFetchingPlayerStats,
+    isErrorPlayerStats,
+  ] = usePlayerStats(
     gamesOrPlayersFlag,
-    selectedTeam,
-    opposingTeamForGames,
+    selectedPlayer,
+    opposingTeamForPlayers,
     dates
   );
+
+  const [gameStats, setGameStats, isFetchingGameStats, isErrorGameStats] =
+    useGameStats(gamesOrPlayersFlag, selectedTeam, opposingTeamForGames, dates);
 
   function applyDates() {
     setDates([dateString(startDate), dateString(endDate)]);
@@ -190,12 +190,13 @@ const ExperimentalPage: NextPageWithLayout = () => {
             <PlayersGrid
               playerStats={playerStats}
               isFetchingPlayerStats={isFetchingPlayerStats}
-              isError={isError}
+              isError={isErrorPlayerStats}
             />
           ) : (
             <GamesGrid
               gameStats={gameStats}
               isFetchingGameStats={isFetchingGameStats}
+              isError={isErrorGameStats}
             />
           )}
         </div>

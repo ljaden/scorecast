@@ -16,7 +16,7 @@ export const usePlayerStats = (
 ) => {
   const [playerStats, setPlayerStats] = useState([]);
   const [isFetchingPlayerStats, setIsFetchingPlayerStats] = useState(false);
-  const [isError, setIsError] = useState<boolean>(false);
+  const [isErrorPlayerStats, setIsErrorPlayerStats] = useState<boolean>(false);
 
   useEffect(() => {
     async function getPlayerStats() {
@@ -37,7 +37,7 @@ export const usePlayerStats = (
       } catch (error: any) {
         console.log("usePlayerStats fetch error");
         setIsFetchingPlayerStats(false);
-        setIsError(true);
+        setIsErrorPlayerStats(true);
         if (error.name === "AbortController") {
           console.log("Request Aborted");
         }
@@ -51,7 +51,12 @@ export const usePlayerStats = (
     }
   }, [selectedPlayer, opposingTeam, dates]);
 
-  return [playerStats, setPlayerStats, isFetchingPlayerStats, isError];
+  return [
+    playerStats,
+    setPlayerStats,
+    isFetchingPlayerStats,
+    isErrorPlayerStats,
+  ];
 };
 
 function addWhereClause(request, condition) {
