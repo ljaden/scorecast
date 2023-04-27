@@ -76,8 +76,6 @@ export async function getGameStats(gameId: string) {
 export async function getStandingsByConf() {
   try {
     const conference = `https://www.espn.com/nba/standings/`;
-    // const league = `https://www.espn.com/nba/standings/_/group/league`;
-    // const division = `https://www.espn.com/nba/standings/_/group/division`;
 
     const res = await getHTML(conference);
     const data = filterStandings(res);

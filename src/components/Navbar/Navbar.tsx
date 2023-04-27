@@ -6,9 +6,10 @@ const navRoutes: { name: string; path: string }[] = [
   { name: "Standings", path: "/standings" },
   { name: "Teams", path: "/teams" },
   { name: "Players", path: "/players" },
+  { name: "Player-Props", path: "/experimental" },
 ];
 
-const Navbar = ({ }) => {
+const Navbar = ({}) => {
   const router = useRouter();
 
   console.log(router.pathname);
@@ -19,11 +20,12 @@ const Navbar = ({ }) => {
           <Link
             key={singleRoute.name}
             href={singleRoute.path}
-            className={`${router.pathname === singleRoute.path ||
-                router.pathname.startsWith(singleRoute.path + "/")
+            className={`${
+              router.pathname === singleRoute.path ||
+              router.pathname.startsWith(singleRoute.path + "/")
                 ? "font-bold"
                 : ""
-              } py-2`}
+            } py-2`}
           >
             {singleRoute.name}
           </Link>
