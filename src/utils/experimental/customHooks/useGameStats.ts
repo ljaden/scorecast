@@ -24,6 +24,7 @@ export const useGameStats = (
       addSelectedTeam(request, selectedTeam);
       addDates(request, dates);
       let mappedData;
+
       if (Object.keys(opposingTeamForGames).length > 0) {
         mappedData = addOpposingTeam([...gameStats], opposingTeamForGames);
       } else {
@@ -34,6 +35,7 @@ export const useGameStats = (
       }
       setGameStats(mappedData);
     }
+
     if (gamesOrPlayersFlag === GAMES_CONSTANT) {
       getGameStats();
     }
