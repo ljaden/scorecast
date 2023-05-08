@@ -76,8 +76,6 @@ export async function getGameStats(gameId: string) {
 export async function getStandingsByConf() {
   try {
     const conference = `https://www.espn.com/nba/standings/`;
-    // const league = `https://www.espn.com/nba/standings/_/group/league`;
-    // const division = `https://www.espn.com/nba/standings/_/group/division`;
 
     const res = await getHTML(conference);
     const data = filterStandings(res);
@@ -94,6 +92,7 @@ export async function getStandings() {
     const league = `https://www.espn.com/nba/standings/_/group/league`;
 
     const res = await getHTML(league);
+    // console.log(res[0].standings, "res");
     const data = filterStandings(res);
 
     return data;
@@ -147,7 +146,6 @@ function filterStandings(data: any) {
       uid: string;
     };
   };
-
   for (let i = 0; i < data.length; i++) {
     //
     delete data[i]["notes"];
@@ -160,15 +158,15 @@ function filterStandings(data: any) {
         gb: team["stats"][5],
         losses: team["stats"][7],
         rank: team["stats"][8],
-        streak: team["stats"][9],
-        pct: team["stats"][10],
-        wins: team["stats"][11],
-        record: team["stats"][12],
-        home_record: team["stats"][13],
-        away_record: team["stats"][14],
-        div_record: team["stats"][15],
-        conf_record: team["stats"][16],
-        l10: team["stats"][17],
+        streak: team["stats"][10],
+        pct: team["stats"][11],
+        wins: team["stats"][12],
+        record: team["stats"][13],
+        home_record: team["stats"][14],
+        away_record: team["stats"][15],
+        div_record: team["stats"][16],
+        conf_record: team["stats"][17],
+        l10: team["stats"][18],
       };
     });
   }
