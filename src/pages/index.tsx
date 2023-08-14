@@ -50,7 +50,6 @@ const HomePage: NextPageWithLayout<AppProps> = ({ schedule }) => {
   const { data } = useQuery<Scheduledata>({
     queryKey: ["schedule", rtkDate.dateFormatted],
     queryFn: () => axiosFetcher(`/api/schedule/${rtkDate.dateFormatted}`),
-    initialData: schedule,
   });
 
   return (

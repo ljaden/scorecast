@@ -20,7 +20,6 @@ const Team = ({
   score,
   liveScore,
 }: Props) => {
-  // console.log(score, "score");
   return (
     <div
       className={`min-w-full py-6 px-4 flex ${isHome ? "sm:flex-row-reverse" : ""
@@ -38,8 +37,15 @@ const Team = ({
               ({wins}-{losses})
             </span>
           )}
-          <span className="text-2xl font-bold text-center">{teamCity}</span>
-          <span className="text-2xl font-bold text-center">{teamName}</span>
+          <span className="text-2xl font-bold text-center hidden lg:block">
+            {teamCity}
+          </span>
+          <span className="text-2xl font-bold text-center hidden md:block">
+            {teamName}
+          </span>
+          <span className="text-2xl font-bold text-center md:hidden">
+            {teamTricode}
+          </span>
         </div>
       </div>
       <span

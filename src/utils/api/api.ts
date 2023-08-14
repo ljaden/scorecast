@@ -33,7 +33,8 @@ export async function getSchedule(dateParam?: string) {
 
       const formattedDate = `${year}${month}${day}`;
 
-      dateParam = formattedDate;
+      // dateParam = formattedDate;
+      dateParam = `${20230120}`;
     }
 
     const { data } = await axios.get(

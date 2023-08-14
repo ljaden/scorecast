@@ -13,5 +13,6 @@ export default async function handler(
     typeof date === "string" ? date : undefined;
 
   const data = await getSchedule(dateQuery);
+
   res.status(200).json(data);
 }

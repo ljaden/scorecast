@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import type { ScheduleGameType, GameType } from "@/utils/types/index";
 
@@ -30,9 +30,15 @@ const Game = ({
   const { data } = useQuery<GameType>({
     queryKey: ["gameInfo", gameId],
     queryFn: () => axiosFetcher(`/api/game/${gameId}`),
-    refetchInterval: (data) => (data?.gameStatus === 2 ? 10000 : false),
+    refetchInterval: 10000,
     enabled: isLive,
   });
+
+  useEffect(() => {
+    if (data?.gameStatus === 3) {
+      setIsLive(false);
+    }
+  }, [data]);
 
   const nationalTvBroadcasters =
     broadcasters?.nationalTvBroadcasters[0]?.broadcasterAbbreviation ?? false;
@@ -40,11 +46,11 @@ const Game = ({
   return (
     <>
       <div className="flex justify-between items-center py-1.5 relative">
-        {data?.gameStatus === 2 && (
+        {isLive && (
           <Image src="/live.svg" width={15} height={15} alt="live"></Image>
         )}
         <span className="mx-auto text-sm uppercase">
-          {isLive ? data?.gameStatusText : gameStatusText}
+          {gameStatus === 1 || 3 ? gameStatusText : data?.gameStatusText}
         </span>
         {nationalTvBroadcasters && (
           <span className="text-gray-500 absolute right-0 hidden text-xs md:block">
@@ -74,11 +80,7 @@ const Game = ({
                 : ""
               } `}
           >
-            {isLive
-              ? data?.awayTeam.score
-              : awayTeam.score === 0
-                ? ""
-                : awayTeam.score}
+            {data?.awayTeam.score ?? awayTeam.score !== 0 ? awayTeam.score : ""}
           </span>
         </div>
         {/* homeTeam */}
@@ -101,11 +103,7 @@ const Game = ({
                 : ""
               } `}
           >
-            {isLive
-              ? data?.homeTeam.score
-              : homeTeam.score === 0
-                ? ""
-                : homeTeam.score}
+            {data?.homeTeam.score ?? homeTeam.score !== 0 ? homeTeam.score : ""}
           </span>
         </div>
       </div>

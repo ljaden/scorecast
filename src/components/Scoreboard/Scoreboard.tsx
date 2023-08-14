@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import type { ScheduleGameType, GameType } from "@/utils/types";
 import { IoReturnDownBackOutline } from "react-icons/io5";
@@ -34,10 +34,36 @@ const Scoreboard = ({
   const { data } = useQuery<GameType>({
     queryKey: ["gameInfo", gameId],
     queryFn: () => axiosFetcher(`/api/game/${gameId}`),
-    refetchInterval: (data) => (data?.gameStatus === 2 ? 10000 : false),
-    onSuccess: (data) => setIsLive(data.gameStatus === 2),
+    refetchInterval: 10000,
     enabled: isLive,
   });
+
+  // check if game is Live
+  useEffect(() => {
+    if (data?.gameStatus === 2) {
+      setIsLive(true);
+    } else {
+      setIsLive(false);
+    }
+  }, [data]);
+
+  // live game clock or status text
+  const liveEle = isLive ? (
+    <>
+      {data?.gameStatusText}
+      <span className="absolute left-25 bottom-3.5 px-2">
+        <Image src="/live.svg" width={15} height={15} alt="live"></Image>
+      </span>
+    </>
+  ) : (
+    <>
+      <span className="uppercase text-lg font-semibold">
+        {gameStatus === 3
+          ? gameStatusText
+          : gameCodeToDT(gameCode) + gameStatusText}
+      </span>
+    </>
+  );
 
   return (
     <section className="">
@@ -46,32 +72,7 @@ const Scoreboard = ({
           <span className="absolute left-1 bottom-3.5 cursor-pointer">
             <IoReturnDownBackOutline onClick={returnHome} size={18} />
           </span>
-
-          {gameCode && gameStatus === 1 ? (
-            <span className="uppercase text-lg font-semibold">
-              {gameCodeToDT(gameCode)}
-              {gameStatusText}
-            </span>
-          ) : (
-            <span className="uppercase text-lg font-semibold">
-              {isLive ? (
-                <>
-                  {data?.gameStatusText}
-
-                  <span className="absolute left-25 bottom-3.5 px-2">
-                    <Image
-                      src="/live.svg"
-                      width={15}
-                      height={15}
-                      alt="live"
-                    ></Image>
-                  </span>
-                </>
-              ) : (
-                gameStatusText
-              )}
-            </span>
-          )}
+          {<span className="uppercase text-lg font-semibold">{liveEle}</span>}
         </div>
         <div className="grid grid-2 sm:grid-cols-2">
           <Team
