@@ -9,8 +9,13 @@ export interface DateState {
 }
 
 const initialState: DateState = {
-  date: moment().format("ddd, MMMM Do"),
-  dateFormatted: moment().format("YYYYMMDD"),
+  date: moment().isBefore(moment("2023-06-12"))
+    ? moment().format("ddd, MMMM Do")
+    : moment("2023-06-12").format("ddd, MMMM Do"),
+  dateFormatted: moment().isBefore(moment("2023-06-12"))
+    ? moment().format("YYYYMDD")
+    : moment("2023-06-12").format("YYYYMMDD"),
+
   todayFormatted: moment().format("YYYYMMDD"),
   dateTimeUTC: new Date().toISOString(),
 };
