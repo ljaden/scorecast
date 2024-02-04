@@ -167,6 +167,7 @@ function filterStandings(data: any) {
         away_record: team["stats"][14],
         div_record: team["stats"][15],
         conf_record: team["stats"][16],
+        l10: team["stats"][17],
       };
     });
   }

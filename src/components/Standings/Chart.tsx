@@ -19,6 +19,7 @@ const Chart = ({ data, conference, division }: AppProps) => {
           <th className="">PCT %</th>
           <th className="">GB</th>
           <th className="">STRK</th>
+          <th className="">L10</th>
           <th className="hidden lg:table-cell">Home</th>
           <th className="hidden lg:table-cell">Away</th>
           <th className="hidden lg:table-cell">Div</th>
@@ -65,6 +66,8 @@ const Chart = ({ data, conference, division }: AppProps) => {
             >
               {team.stats.streak}
             </td>
+            <td>{team.stats.l10}</td>
+
             <td className="hidden lg:table-cell">{team.stats.home_record}</td>
             <td className="hidden lg:table-cell">{team.stats.away_record}</td>
             <td className="hidden lg:table-cell">{team.stats.div_record}</td>
