@@ -8,7 +8,6 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Scheduledata>
 ) {
-  // console.log(req.query);
   const data = await getFullSchedule();
   res.status(200).json(data);
 }

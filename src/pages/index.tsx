@@ -12,7 +12,7 @@ import Scorebar from "@/components/Scorebar/Scorebar";
 import Scoreboard from "@/components/Scoreboard/Scoreboard";
 import DashLayout from "@/components/Layouts/DashLayout";
 
-import { getSchedule } from "@/utils/api/api";
+// import { getSchedule } from "@/utils/api/api";
 import { useQuery } from "@tanstack/react-query";
 import axiosFetcher from "@/utils/api/axiosFetcher";
 
@@ -20,18 +20,18 @@ type AppProps = {
   schedule: Scheduledata;
 };
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const date = context.query;
-  const data = await getSchedule(typeof date === "string" ? date : "");
+// export const getServerSideProps: GetServerSideProps = async (context) => {
+//   const date = context.query;
+//   const data = await getSchedule(typeof date === "string" ? date : "");
+//
+//   return {
+//     props: {
+//       schedule: data ?? null,
+//     },
+//   };
+// };
 
-  return {
-    props: {
-      schedule: data ?? null,
-    },
-  };
-};
-
-const HomePage: NextPageWithLayout<AppProps> = ({ schedule }) => {
+const HomePage: NextPageWithLayout<AppProps> = () => {
   const rtkDate = useSelector((state: RootState) => state.date);
   const [showGameStats, setShowGameStats] = useState<boolean>(false);
   const [singleGameStats, setSingleGameStats] =

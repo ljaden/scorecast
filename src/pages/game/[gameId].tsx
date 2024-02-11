@@ -20,8 +20,6 @@ const GamePage: NextPageWithLayout = () => {
   if (isLoading) return <div>Loading</div>;
   if (isError) return <div>ERROR</div>;
 
-  console.log(data);
-
   return (
     <>
       <div>{gameId}</div>
