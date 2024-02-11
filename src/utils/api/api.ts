@@ -73,7 +73,7 @@ export async function getGameStats(gameId: string) {
   }
 }
 
-// Fetch standings by Conference
+// * Fetch standings by Conference
 export async function getStandingsByConf() {
   try {
     const conference = `https://www.espn.com/nba/standings/`;
@@ -87,7 +87,7 @@ export async function getStandingsByConf() {
   }
 }
 
-// Fetch overall standings of league
+// * Fetch overall standings of league
 export async function getStandings() {
   try {
     const league = `https://www.espn.com/nba/standings/_/group/league`;
@@ -102,7 +102,7 @@ export async function getStandings() {
   }
 }
 
-// Fetch standings by Conference
+// * Fetch standings by Conference
 export async function getStandingsByDiv() {
   try {
     const division = `https://www.espn.com/nba/standings/_/group/division`;
@@ -119,6 +119,142 @@ export async function getStandingsByDiv() {
   }
 }
 
+// * Fetch Teams stats
+export async function getTeams() {
+  try {
+    const url = `https://stats.nba.com/stats/leaguestandingsv3?LeagueID=00&Season=2023-24&SeasonType=Regular%20Season&Section=overall`;
+    const { data: standings } = await axios.get(url, {
+      headers: {
+        Host: "stats.nba.com",
+        Connection: "keep-alive",
+        Accept: "application/json, text/plain, */*",
+        "User-Agent":
+          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36",
+        Origin: "https://www.nba.com",
+        Referer: "https://www.nba.com/",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Accept-Language": "en-US,en;q=0.5",
+        "Sec-Fetch-Dest": "empty",
+        "Sec-Fetch-Mode": "cors",
+        "Sec-Fetch-Site": "same-site",
+        "Sec-GPC": "1",
+      },
+    });
+
+    const selectedHeaders = [
+      "TeamID",
+      "TeamCity",
+      "TeamName",
+      "TeamSlug",
+      "Conference",
+      "ConferenceRecord",
+      "PlayoffRank",
+      "Division",
+      "DivisionRank",
+      "WINS",
+      "LOSSES",
+      "WinPCT",
+      "HOME",
+      "ROAD",
+      "L10",
+      "Last10Home",
+      "Last10Road",
+      "CurrentStreak",
+      "strCurrentStreak",
+    ];
+    const { headers, rowSet } = standings.resultSets[0];
+
+    const result = rowSet.map((row: any) =>
+      row.reduce((obj: any, val: any, i: number) => {
+        if (selectedHeaders.includes(headers[i])) {
+          obj[headers[i]] = val;
+        }
+        return obj;
+      }, {})
+    );
+
+    const data = {
+      season: standings.parameters.SeasonYear,
+      teams: result,
+    };
+
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+// * Fetch Teams Schedule
+export async function getTeamSchedule(teamID) {
+  try {
+    const url = `https://stats.nba.com/stats/teamgamelog?DateFrom=&DateTo=&LeagueID=&Season=2023-24&SeasonType=Regular+Season&TeamID=${teamID}`;
+
+    const data = await axios.get(url, {
+      headers: {
+        Host: "stats.nba.com",
+        Connection: "keep-alive",
+        Accept: "application/json, text/plain, */*",
+        "User-Agent":
+          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36",
+        Origin: "https://www.nba.com",
+        Referer: "https://www.nba.com/",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Accept-Language": "en-US,en;q=0.5",
+        "Sec-Fetch-Dest": "empty",
+        "Sec-Fetch-Mode": "cors",
+        "Sec-Fetch-Site": "same-site",
+        "Sec-GPC": "1",
+      },
+    });
+
+    const selectedHeaders = [
+      "Team_ID",
+      "Game_ID",
+      "GAME_DATE",
+      "MATCHUP",
+      "WL",
+      "W",
+      "L",
+      "W_PCT",
+      "MIN",
+      "FGM",
+      "FGA",
+      "FG_PCT",
+      "FG3M",
+      "FG3A",
+      "FG3_PCT",
+      "FTM",
+      "FTA",
+      "FT_PCT",
+      "OREB",
+      "DREB",
+      "REB",
+      "AST",
+      "STL",
+      "BLK",
+      "TOV",
+      "PF",
+      "PTS",
+    ];
+
+    const { headers, rowSet } = data.data.resultSets[0];
+
+    const result = rowSet.map((row: any) =>
+      row.reduce((obj: any, val: any, i: number) => {
+        if (selectedHeaders.includes(headers[i])) {
+          obj[headers[i]] = val;
+        }
+        return obj;
+      }, {})
+    );
+
+    // console.log(result, "here");
+
+    return result;
+  } catch (error) {
+    throw error;
+  }
+}
 async function getHTML(url: string) {
   // fetch HTML site and parse out `standings table`
   const { data } = await axios.get(url);

@@ -8,9 +8,8 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<StandingsType>
 ) {
-  // const data = await getStandings();
   try {
-    const url = `https://stats.nba.com/stats/leaguestandingsv3?LeagueID=00&Season=2022-23&SeasonType=Regular%20Season&Section=overall`;
+    const url = `https://stats.nba.com/stats/leaguestandingsv3?LeagueID=00&Season=2023-24&SeasonType=Regular%20Season&Section=overall`;
     // const url = `https://stats.nba.com/stats/leaguestandings?LeagueID=00&Season=2022-23&SeasonType=Regular+Season&SeasonYear=`;
     const { data: standings } = await axios.get(url, {
       headers: {

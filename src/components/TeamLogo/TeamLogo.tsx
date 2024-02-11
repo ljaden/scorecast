@@ -26,6 +26,7 @@ const TeamLogo = ({ teamId, width, height }: LogoProps) => {
       width={width}
       height={height}
       onError={() => setSrc("https://cdn.nba.com/logos/nba/fallback.svg")}
+      priority={false}
     ></Image>
   );
 };
